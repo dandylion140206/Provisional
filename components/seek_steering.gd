@@ -2,7 +2,7 @@ class_name SeekSteering
 extends Resource
 
 @export_range(1000.0, 10000.0, 100.0) var target_speed: float = 6000.0
-@export_range(1000.0, 20000.0, 100.0) var acceleration: float = 11000.0
+@export_range(1000.0, 20000.0, 100.0) var acceleration: float = 10500.0
 
 
 func calculate_velocity(

@@ -16,6 +16,10 @@ func get_velocity() -> Vector2:
 	return _velocity
 
 
+func get_speed() -> float:
+	return _velocity.length()
+
+
 func set_velocity(velocity: Vector2) -> void:
 	_velocity = velocity.limit_length(max_speed)
 

@@ -1,16 +1,22 @@
 [gd_scene format=3 uid="uid://uiulovu4jc4r"]
 
-[ext_resource type="Script" uid="uid://b33kavqsjahjc" path="res://main/main.gd" id="1_53q0u"]
-[ext_resource type="Script" uid="uid://bp1kypbjxpikr" path="res://debug/debug_controller.gd" id="2_c651c"]
-[ext_resource type="PackedScene" uid="uid://baj11f6v855i" path="res://ball/ball.tscn" id="2_pjrb6"]
-[ext_resource type="PackedScene" uid="uid://cg1ug3ry6a5x1" path="res://cursor/cursor.tscn" id="2_xwkvk"]
+[ext_resource type="Script" uid="uid://b33kavqsjahjc" path="res://main/main.gd" id="1_ipbj0"]
+[ext_resource type="Script" uid="uid://bp1kypbjxpikr" path="res://debug/debug_controller.gd" id="2_ipbj0"]
+[ext_resource type="PackedScene" uid="uid://cg1ug3ry6a5x1" path="res://cursor/cursor.tscn" id="3_c2dye"]
+[ext_resource type="PackedScene" uid="uid://baj11f6v855i" path="res://ball/ball.tscn" id="4_n6juq"]
+[ext_resource type="PackedScene" uid="uid://bhkvgq3g5yshc" path="res://target/target.tscn" id="5_3wy1v"]
+[ext_resource type="Script" uid="uid://be6knta7t0vif" path="res://main/target_spawner.gd" id="6_kfbq2"]
 
 [node name="Main" type="Node" unique_id=1927368927]
-script = ExtResource("1_53q0u")
+script = ExtResource("1_ipbj0")
 
 [node name="DebugController" type="Node" parent="." unique_id=486050992]
-script = ExtResource("2_c651c")
+script = ExtResource("2_ipbj0")
 
-[node name="Cursor" parent="." unique_id=413606096 instance=ExtResource("2_xwkvk")]
+[node name="TargetSpawner" type="Node2D" parent="." unique_id=713743795]
+script = ExtResource("6_kfbq2")
+target_scene = ExtResource("5_3wy1v")
 
-[node name="Ball" parent="." unique_id=698706806 instance=ExtResource("2_pjrb6")]
+[node name="Cursor" parent="." unique_id=413606096 instance=ExtResource("3_c2dye")]
+
+[node name="Ball" parent="." unique_id=698706806 instance=ExtResource("4_n6juq")]

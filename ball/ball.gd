@@ -5,7 +5,7 @@ extends Node2D
 
 @onready var movement: Movement = %Movement
 @onready var boost: BallBoost = %BallBoost
-@onready var smoke: BoostSmoke = %Smoke
+@onready var boost_smoke: BoostSmoke = %Smoke
 
 
 func _ready() -> void:
@@ -13,7 +13,7 @@ func _ready() -> void:
 
 	movement.setup(self)
 	boost.setup(movement)
-	smoke.setup(movement)
+	boost_smoke.setup(movement)
 
 
 func _process(delta: float) -> void:

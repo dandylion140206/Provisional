@@ -19,15 +19,16 @@ point_count = 2
 script = ExtResource("1_6plaf")
 seek_steering = ExtResource("2_pwunn")
 
-[node name="HitArea" type="Area2D" parent="." unique_id=1563584028]
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HitArea" unique_id=1822812094]
-shape = SubResource("CircleShape2D_ua4af")
-
 [node name="Visual" type="Node2D" parent="." unique_id=125996670]
 script = ExtResource("3_biv8x")
 metadata/_custom_type_script = "uid://b3mrwkpsh0eno"
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=1563584028]
+unique_name_in_owner = true
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1822812094]
+shape = SubResource("CircleShape2D_ua4af")
 
 [node name="Movement" type="Node" parent="." unique_id=607524805]
 unique_name_in_owner = true
@@ -60,7 +61,7 @@ damping_min = 300.0
 damping_max = 300.0
 scale_amount_min = 0.5
 scale_amount_curve = SubResource("Curve_b1xky")
-color = Color(1, 1, 1, 0.3882353)
+color = Color(1, 1, 1, 0.29411766)
 script = ExtResource("7_b1xky")
 
 [connection signal="boost_used" from="BallBoost" to="BallBoost/BoostSound" method="play"]
