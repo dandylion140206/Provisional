@@ -1,6 +1,8 @@
 class_name Hurtbox
 extends Area2D
 
+signal hit_received(speed: float)
+
 var _health: Health
 
 
@@ -18,6 +20,10 @@ func receive_damage(amount: float) -> void:
 	_health.damage(amount)
 
 
+func notify_hit(speed: float) -> void:
+	hit_received.emit(speed)
+
+
 func set_enabled(enabled: bool) -> void:
-	monitoring = enabled
-	monitorable = enabled
+	set_deferred("monitoring", enabled)
+	set_deferred("monitorable", enabled)

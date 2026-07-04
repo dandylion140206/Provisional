@@ -18,7 +18,7 @@ func calculate_damage(speed: float) -> float:
 	return clampf(damage_amount, min_damage, max_damage)
 
 
-func _on_hit_detected(hurtbox: Hurtbox) -> void:
+func send_damage_to(hurtbox: Hurtbox) -> void:
 	if hurtbox == null:
 		return
 

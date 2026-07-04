@@ -8,6 +8,7 @@ extends Node2D
 @onready var health_bar: HealthBar = %HealthBar
 @onready var hit_sound: AudioStreamPlayer2D = %HitSound
 @onready var death_sound: AudioStreamPlayer2D = %DeathSound
+@onready var hit_stop: HitStop = %HitStop
 
 var _is_dying: bool = false
 
@@ -15,6 +16,8 @@ var _is_dying: bool = false
 func _ready() -> void:
 	hit_flash.setup(visual)
 	hurtbox.setup(health)
+
+	hurtbox.hit_received.connect(_on_hit_received)
 
 	health.damaged.connect(_on_damaged)
 	health.health_changed.connect(_on_health_changed)
@@ -58,6 +61,10 @@ func _on_died() -> void:
 	await death_sound.finished
 
 	queue_free()
+
+
+func _on_hit_received(speed: float) -> void:
+	hit_stop.start_by_speed(speed)
 
 
 func _play_sound_from_start(sound: AudioStreamPlayer2D) -> void:

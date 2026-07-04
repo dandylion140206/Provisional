@@ -9,6 +9,8 @@
 [ext_resource type="AudioStream" uid="uid://c1k0prxqnpsex" path="res://assets/sfx/ブースト/DSGNMisc_HIT-Synth Hit_HY_PC-001.wav" id="6_r541t"]
 [ext_resource type="Script" uid="uid://coc8o2pj55jhv" path="res://ball/boost_smoke.gd" id="7_b1xky"]
 [ext_resource type="Script" uid="uid://dve7lyb5w0ne3" path="res://components/damage/contact_damage.gd" id="9_orjm5"]
+[ext_resource type="Script" uid="uid://cyv0rwf4lf2bv" path="res://components/hit_stop/hit_stop.gd" id="10_orjm5"]
+[ext_resource type="Resource" uid="uid://cuiytnj5pmta1" path="res://components/hit_stop/ball_hit_stop_profile.tres" id="11_melhi"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ua4af"]
 radius = 20.0
@@ -72,6 +74,11 @@ scale_amount_min = 0.5
 scale_amount_curve = SubResource("Curve_b1xky")
 color = Color(1, 1, 1, 0.29411766)
 script = ExtResource("7_b1xky")
+
+[node name="HitStop" type="Node" parent="." unique_id=1979259650]
+unique_name_in_owner = true
+script = ExtResource("10_orjm5")
+profile = ExtResource("11_melhi")
 
 [connection signal="boost_used" from="BallBoost" to="BallBoost/BoostSound" method="play"]
 [connection signal="boost_used" from="BallBoost" to="BallBoost/Smoke" method="start_emitting"]
