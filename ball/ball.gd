@@ -3,7 +3,9 @@ extends Node2D
 
 @export var seek_steering: SeekSteering
 
+@onready var hitbox: Hitbox = %Hitbox
 @onready var movement: Movement = %Movement
+@onready var contact_damage: ContactDamage = %ContactDamage
 @onready var boost: BallBoost = %BallBoost
 @onready var boost_smoke: BoostSmoke = %Smoke
 
@@ -12,8 +14,11 @@ func _ready() -> void:
 	assert(seek_steering != null, "seek_steering must not be null.")
 
 	movement.setup(self)
+	contact_damage.setup(Callable(movement, "get_speed"))
 	boost.setup(movement)
 	boost_smoke.setup(movement)
+
+	hitbox.hit_detected.connect(contact_damage._on_hit_detected)
 
 
 func _process(delta: float) -> void:

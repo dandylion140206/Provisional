@@ -29,7 +29,6 @@ func spawn_initial_targets() -> void:
 
 func _spawn_target() -> void:
 	var target := target_scene.instantiate() as Target
-	assert(target != null, "target_scene must instantiate Target.")
 
 	add_child(target)
 

@@ -1,6 +1,7 @@
 class_name Health
 extends Node
 
+signal damaged(amount: float, current_health: float, max_health: float)
 signal health_changed(current_health: float, max_health: float)
 signal died
 
@@ -23,6 +24,8 @@ func damage(amount: float) -> void:
 		return
 
 	_current_health = maxf(_current_health - amount, 0.0)
+
+	damaged.emit(amount, _current_health, max_health)
 	health_changed.emit(_current_health, max_health)
 
 	if _current_health <= 0.0:

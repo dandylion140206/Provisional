@@ -4,9 +4,11 @@
 [ext_resource type="Resource" uid="uid://box7n6kkqfsn3" path="res://components/seek_steering.tres" id="2_pwunn"]
 [ext_resource type="Script" uid="uid://cmfnqgmqx1sow" path="res://components/movement.gd" id="3_6xd6y"]
 [ext_resource type="Script" uid="uid://b3mrwkpsh0eno" path="res://components/circle_visual.gd" id="3_biv8x"]
+[ext_resource type="Script" uid="uid://baeqwfpgl2bo3" path="res://components/damage/hitbox.gd" id="4_vf1tv"]
 [ext_resource type="Script" uid="uid://bjnyisktek3ev" path="res://ball/ball_boost.gd" id="5_0p2w7"]
 [ext_resource type="AudioStream" uid="uid://c1k0prxqnpsex" path="res://assets/sfx/ブースト/DSGNMisc_HIT-Synth Hit_HY_PC-001.wav" id="6_r541t"]
 [ext_resource type="Script" uid="uid://coc8o2pj55jhv" path="res://ball/boost_smoke.gd" id="7_b1xky"]
+[ext_resource type="Script" uid="uid://dve7lyb5w0ne3" path="res://components/damage/contact_damage.gd" id="9_orjm5"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ua4af"]
 radius = 20.0
@@ -26,6 +28,7 @@ metadata/_custom_type_script = "uid://b3mrwkpsh0eno"
 [node name="Hitbox" type="Area2D" parent="." unique_id=1563584028]
 unique_name_in_owner = true
 collision_mask = 2
+script = ExtResource("4_vf1tv")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1822812094]
 shape = SubResource("CircleShape2D_ua4af")
@@ -33,6 +36,12 @@ shape = SubResource("CircleShape2D_ua4af")
 [node name="Movement" type="Node" parent="." unique_id=607524805]
 unique_name_in_owner = true
 script = ExtResource("3_6xd6y")
+
+[node name="ContactDamage" type="Node" parent="." unique_id=1516305440]
+unique_name_in_owner = true
+script = ExtResource("9_orjm5")
+base_damage = 5.0
+multiplier = 0.01
 
 [node name="BallBoost" type="Node2D" parent="." unique_id=686657638]
 unique_name_in_owner = true
