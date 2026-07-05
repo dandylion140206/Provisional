@@ -6,11 +6,11 @@ extends Node2D
 @onready var visual: TargetVisual = %Visual
 @onready var hit_flash: HitFlash = %HitFlash
 @onready var hurtbox: Hurtbox = %Hurtbox
+@onready var hit_stop: HitStop = %HitStop
 @onready var health: Health = %Health
 @onready var health_bar: HealthBar = %HealthBar
 @onready var hit_sound: AudioStreamPlayer2D = %HitSound
 @onready var death_sound: AudioStreamPlayer2D = %DeathSound
-@onready var hit_stop: HitStop = %HitStop
 
 var _is_dying: bool = false
 
@@ -68,7 +68,7 @@ func _on_died() -> void:
 
 
 func _on_hit_received(hit_speed: float) -> void:
-	var hit_stop_duration := hit_stop_profile.calculate_duration(hit_speed)
+	var hit_stop_duration := hit_stop_profile.get_duration(hit_speed)
 	hit_stop.start(hit_stop_duration)
 
 

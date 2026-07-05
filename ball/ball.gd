@@ -6,10 +6,9 @@ extends Node2D
 
 @onready var hitbox: Hitbox = %Hitbox
 @onready var movement: Movement = %Movement
+@onready var hit_stop: HitStop = %HitStop
 @onready var contact_damage: ContactDamage = %ContactDamage
 @onready var boost: BallBoost = %BallBoost
-@onready var boost_smoke: BoostSmoke = %Smoke
-@onready var hit_stop: HitStop = %HitStop
 
 
 func _ready() -> void:
@@ -18,7 +17,6 @@ func _ready() -> void:
 
 	movement.setup(self)
 	boost.setup(movement)
-	boost_smoke.setup(movement)
 
 	hitbox.hit_detected.connect(_on_hit_detected)
 	boost.boost_used.connect(hit_stop.cancel_deferred)
@@ -59,7 +57,7 @@ func _on_hit_detected(hurtbox: Hurtbox) -> void:
 
 	var speed := movement.get_speed()
 	var damage_amount := contact_damage.calculate_damage(speed)
-	var hit_stop_duration := hit_stop_profile.calculate_duration(speed)
+	var hit_stop_duration := hit_stop_profile.get_duration(speed)
 
 	hurtbox.receive_hit(damage_amount, speed)
 	hit_stop.start(hit_stop_duration)

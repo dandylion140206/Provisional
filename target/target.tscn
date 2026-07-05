@@ -15,6 +15,7 @@
 radius = 40.0
 
 [node name="Target" type="Node2D" unique_id=1674259745]
+physics_interpolation_mode = 2
 script = ExtResource("1_6nu6o")
 hit_stop_profile = ExtResource("10_iod3p")
 

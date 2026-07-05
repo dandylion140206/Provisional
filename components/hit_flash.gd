@@ -2,7 +2,7 @@ class_name HitFlash
 extends Node
 
 @export var flash_modulate: Color = Color(3.0, 3.0, 3.0, 1.0)
-@export_range(0.01, 0.5, 0.01) var duration: float = 0.08
+@export_range(0.01, 0.5, 0.01) var duration: float = 0.2
 
 var _target: CanvasItem
 var _base_self_modulate: Color = Color.WHITE
