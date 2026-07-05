@@ -5,7 +5,7 @@ var _remaining_time: float = 0.0
 var _is_active: bool = false
 
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if not _is_active:
 		return
 

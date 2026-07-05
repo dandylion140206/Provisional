@@ -24,8 +24,9 @@ func _ready() -> void:
 	boost.boost_used.connect(hit_stop.cancel_deferred)
 
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if hit_stop.is_active():
+		movement.move(delta * 0)
 		_use_boost()
 		return
 
