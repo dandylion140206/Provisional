@@ -42,7 +42,7 @@ script = ExtResource("5_85njf")
 
 [node name="HealthBar" type="Node2D" parent="." unique_id=1574384955]
 unique_name_in_owner = true
-z_index = 10
+z_index = 100
 z_as_relative = false
 position = Vector2(0, -55)
 script = ExtResource("6_n0ue5")

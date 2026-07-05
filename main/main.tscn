@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://baj11f6v855i" path="res://ball/ball.tscn" id="4_n6juq"]
 [ext_resource type="PackedScene" uid="uid://bhkvgq3g5yshc" path="res://target/target.tscn" id="5_3wy1v"]
 [ext_resource type="Script" uid="uid://be6knta7t0vif" path="res://main/target_spawner.gd" id="6_kfbq2"]
+[ext_resource type="PackedScene" uid="uid://f0704l0c5vxf" path="res://effects/effects_layer.tscn" id="7_4dugh"]
 
 [node name="Main" type="Node" unique_id=1927368927]
 script = ExtResource("1_ipbj0")
@@ -20,3 +21,5 @@ target_scene = ExtResource("5_3wy1v")
 [node name="Cursor" parent="." unique_id=413606096 instance=ExtResource("3_c2dye")]
 
 [node name="Ball" parent="." unique_id=698706806 instance=ExtResource("4_n6juq")]
+
+[node name="EffectsLayer" parent="." unique_id=1725803480 instance=ExtResource("7_4dugh")]
