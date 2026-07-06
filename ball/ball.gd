@@ -12,16 +12,10 @@ signal boosted(ball: Ball, movement: Movement)
 @onready var contact_damage: ContactDamage = %ContactDamage
 @onready var boost: BallBoost = %BallBoost
 
-var _previous_physics_position: Vector2 = Vector2.ZERO
-var _current_physics_position: Vector2 = Vector2.ZERO
-
 
 func _ready() -> void:
 	assert(seek_steering != null, "seek_steering must not be null.")
 	assert(hit_stop_profile != null, "hit_stop_profile must not be null.")
-
-	_previous_physics_position = global_position
-	_current_physics_position = global_position
 
 	movement.setup(self)
 	boost.setup(movement)
@@ -32,11 +26,8 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	_previous_physics_position = _current_physics_position
-
 	if hit_stop.is_active():
 		_use_boost()
-		_current_physics_position = global_position
 		return
 
 	var target_position := get_global_mouse_position()
@@ -44,21 +35,6 @@ func _physics_process(delta: float) -> void:
 	_update_velocity(target_position, delta)
 	_use_boost()
 	movement.move(delta)
-
-	_current_physics_position = global_position
-
-
-func get_interpolated_global_position() -> Vector2:
-	var interpolation_fraction := Engine.get_physics_interpolation_fraction()
-	return _previous_physics_position.lerp(
-		_current_physics_position,
-		interpolation_fraction
-	)
-
-
-func reset_interpolated_position_tracking() -> void:
-	_previous_physics_position = global_position
-	_current_physics_position = global_position
 
 
 func _update_velocity(target_position: Vector2, delta: float) -> void:

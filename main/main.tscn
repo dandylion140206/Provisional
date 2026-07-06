@@ -6,9 +6,19 @@
 [ext_resource type="PackedScene" uid="uid://baj11f6v855i" path="res://ball/ball.tscn" id="4_n6juq"]
 [ext_resource type="PackedScene" uid="uid://bhkvgq3g5yshc" path="res://target/target.tscn" id="5_3wy1v"]
 [ext_resource type="Script" uid="uid://be6knta7t0vif" path="res://main/target_spawner.gd" id="6_kfbq2"]
-[ext_resource type="PackedScene" uid="uid://f0704l0c5vxf" path="res://effects/effects_layer.tscn" id="7_4dugh"]
+[ext_resource type="Script" uid="uid://dw6ioisa2esw6" path="res://effects/effects_layer.gd" id="7_4dugh"]
+[ext_resource type="Script" uid="uid://b10subhbgoubs" path="res://components/effects/trail.gd" id="8_67ri8"]
+
+[sub_resource type="Curve" id="Curve_67ri8"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+metadata/_snap_enabled = true
+
+[sub_resource type="Gradient" id="Gradient_orjm5"]
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
 
 [node name="Main" type="Node" unique_id=1927368927]
+physics_interpolation_mode = 2
 script = ExtResource("1_ipbj0")
 
 [node name="DebugController" type="Node" parent="." unique_id=486050992]
@@ -22,4 +32,15 @@ target_scene = ExtResource("5_3wy1v")
 
 [node name="Ball" parent="." unique_id=698706806 instance=ExtResource("4_n6juq")]
 
-[node name="EffectsLayer" parent="." unique_id=1725803480 instance=ExtResource("7_4dugh")]
+[node name="EffectsLayer" type="Node2D" parent="." unique_id=1378478455]
+script = ExtResource("7_4dugh")
+
+[node name="Trail" type="Line2D" parent="EffectsLayer" unique_id=454232775 node_paths=PackedStringArray("target")]
+physics_interpolation_mode = 2
+width = 40.0
+width_curve = SubResource("Curve_67ri8")
+gradient = SubResource("Gradient_orjm5")
+joint_mode = 2
+begin_cap_mode = 2
+script = ExtResource("8_67ri8")
+target = NodePath("../../Ball")

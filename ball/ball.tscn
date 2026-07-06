@@ -54,6 +54,7 @@ one_shot = true
 
 [node name="BoostSound" type="AudioStreamPlayer2D" parent="BallBoost" unique_id=379679797]
 stream = ExtResource("6_r541t")
+volume_db = -2.0
 bus = &"SFX"
 
 [connection signal="boost_used" from="BallBoost" to="BallBoost/BoostSound" method="play"]

@@ -1,7 +1,0 @@
-[gd_scene format=3 uid="uid://f0704l0c5vxf"]
-
-[ext_resource type="Script" uid="uid://dw6ioisa2esw6" path="res://effects/effects_layer.gd" id="1_h00ps"]
-
-[node name="EffectsLayer" type="Node2D" unique_id=1725803480]
-script = ExtResource("1_h00ps")
-boost_trail_z_index = 5

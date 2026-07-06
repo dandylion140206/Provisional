@@ -8,32 +8,34 @@ enum SourcePositionMode {
 
 @export var source_position_mode: SourcePositionMode = SourcePositionMode.PHYSICS
 
-@export_range(0.05, 2.0, 0.01) var duration: float = 0.34
-@export_range(10.0, 600.0, 1.0) var max_trail_length: float = 400.0
-@export_range(1.0, 80.0, 1.0) var min_point_distance: float = 4.0
-@export_range(0.0, 80.0, 1.0) var emit_offset: float = 0.0
+@export_range(10.0, 1000.0, 1.0) var trail_length: float = 400.0
+@export_range(0.0, 1.0, 0.01) var grow_duration: float = 0.01
+@export_range(0.05, 2.0, 0.01) var shrink_duration: float = 0.3
+@export_range(1.0, 80.0, 1.0) var point_spacing: float = 4.0
+@export_range(0.0, 120.0, 1.0) var emit_offset: float = 0.0
 @export_range(1.0, 80.0, 1.0) var trail_width: float = 40.0
-@export_range(4, 256, 1) var max_points: int = 80
+@export_range(0, 3000, 1) var max_points_override: int = 0
 
-@export var tail_color: Color = Color(0.35, 0.75, 1.0, 0.0)
-@export var body_color: Color = Color(0.35, 0.9, 1.0, 0.65)
-@export var head_color: Color = Color(1.0, 1.0, 1.0, 0.95)
+@export var tail_color: Color = Color(0.9, 0.9, 0.9, 0.0)
+@export var head_color: Color = Color(0.9, 0.9, 0.9, 1.0)
 
 var _source: Ball
 var _movement: Movement
 var _elapsed_time: float = 0.0
 var _world_points: Array[Vector2] = []
+var _head_world_position: Vector2 = Vector2.ZERO
 
 
 func _ready() -> void:
 	width = trail_width
+	gradient = _create_gradient()
+
 	antialiased = true
 	round_precision = 16
 	joint_mode = Line2D.LINE_JOINT_ROUND
 	begin_cap_mode = Line2D.LINE_CAP_ROUND
-	end_cap_mode = Line2D.LINE_CAP_ROUND
+	end_cap_mode = Line2D.LINE_CAP_NONE
 
-	gradient = _create_gradient()
 	width_curve = _create_width_curve()
 
 	clear_points()
@@ -53,6 +55,7 @@ func start_trail() -> void:
 	_world_points.clear()
 
 	var start_point: Vector2 = _get_emit_world_position()
+	_head_world_position = start_point
 	_world_points.append(start_point)
 
 	_apply_line_points()
@@ -73,6 +76,8 @@ func _process(delta: float) -> void:
 
 
 func _update_head_point(head_position: Vector2) -> void:
+	_head_world_position = head_position
+
 	if _world_points.is_empty():
 		_world_points.append(head_position)
 		return
@@ -80,17 +85,17 @@ func _update_head_point(head_position: Vector2) -> void:
 	var last_point: Vector2 = _world_points.back()
 	var distance: float = last_point.distance_to(head_position)
 
-	if distance >= min_point_distance:
-		var step_count: int = ceili(distance / min_point_distance)
+	if distance >= point_spacing:
+		var step_count: int = ceili(distance / point_spacing)
 
 		for i in range(1, step_count + 1):
 			var weight: float = float(i) / float(step_count)
 			var interpolated_point: Vector2 = last_point.lerp(head_position, weight)
 			_world_points.append(interpolated_point)
-	else:
-		_world_points[_world_points.size() - 1] = head_position
 
-	while _world_points.size() > max_points:
+	var max_point_count: int = _get_max_point_count()
+
+	while _world_points.size() > max_point_count:
 		_world_points.pop_front()
 
 
@@ -137,13 +142,32 @@ func _get_total_length() -> float:
 
 
 func _get_current_allowed_length() -> float:
-	if duration <= 0.0:
+	var total_duration: float = grow_duration + shrink_duration
+
+	if total_duration <= 0.0:
 		return 0.0
 
-	var progress: float = clampf(_elapsed_time / duration, 0.0, 1.0)
-	var shrink_ratio: float = 1.0 - progress
+	if _elapsed_time < grow_duration:
+		if grow_duration <= 0.0:
+			return trail_length
 
-	return max_trail_length * shrink_ratio
+		var grow_progress: float = clampf(_elapsed_time / grow_duration, 0.0, 1.0)
+		return trail_length * grow_progress
+
+	var shrink_time: float = _elapsed_time - grow_duration
+
+	if shrink_duration <= 0.0:
+		return 0.0
+
+	var shrink_progress: float = clampf(shrink_time / shrink_duration, 0.0, 1.0)
+	return trail_length * (1.0 - shrink_progress)
+
+
+func _get_max_point_count() -> int:
+	if max_points_override > 0:
+		return max_points_override
+
+	return ceili(trail_length / point_spacing) + 4
 
 
 func _apply_line_points() -> void:
@@ -152,11 +176,19 @@ func _apply_line_points() -> void:
 	for world_point: Vector2 in _world_points:
 		local_points.append(to_local(world_point))
 
+	if not _world_points.is_empty():
+		var last_point: Vector2 = _world_points.back()
+
+		if last_point.distance_to(_head_world_position) > 0.001:
+			local_points.append(to_local(_head_world_position))
+
 	points = local_points
 
 
 func _should_finish() -> bool:
-	if _elapsed_time < duration:
+	var total_duration: float = grow_duration + shrink_duration
+
+	if _elapsed_time < total_duration:
 		return false
 
 	return _world_points.size() <= 1
@@ -169,6 +201,9 @@ func _get_emit_world_position() -> Vector2:
 	var source_position: Vector2 = _get_source_position()
 
 	if _movement == null:
+		return source_position
+
+	if emit_offset <= 0.0:
 		return source_position
 
 	var velocity: Vector2 = _movement.get_velocity()
@@ -195,7 +230,6 @@ func _create_gradient() -> Gradient:
 	new_gradient.set_color(0, tail_color)
 	new_gradient.set_offset(0, 0.0)
 
-	new_gradient.add_point(0.45, body_color)
 	new_gradient.add_point(1.0, head_color)
 
 	return new_gradient
