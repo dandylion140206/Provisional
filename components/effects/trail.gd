@@ -12,7 +12,7 @@ enum SourcePositionMode {
 @export_range(0.0, 1.0, 0.01) var point_lifetime: float = 0.5
 
 var _source: Node2D
-var _interpolated_position_tracker: InterpolatedPositionTracker
+var _get_interpolated_position: Callable
 var _point_ages: Array[float] = []
 
 var _is_lifetime_transitioning := false
@@ -54,14 +54,14 @@ func _process(delta: float) -> void:
 
 func setup(
 	source: Node2D,
-	interpolated_position_tracker: InterpolatedPositionTracker = null
+	get_interpolated_position: Callable = Callable()
 ) -> void:
 	assert(source != null, "source must not be null.")
 
 	_source = source
-	_interpolated_position_tracker = interpolated_position_tracker
+	_get_interpolated_position = get_interpolated_position
 
-	_validate_interpolated_position_tracker()
+	_validate_interpolated_position_getter()
 
 
 func clear_trail() -> void:
@@ -94,18 +94,18 @@ func transition_point_lifetime(value: float, duration: float) -> void:
 	_lifetime_transition_elapsed = 0.0
 
 
-func _validate_interpolated_position_tracker() -> void:
+func _validate_interpolated_position_getter() -> void:
 	if source_position_mode != SourcePositionMode.INTERPOLATED_POSITION:
 		return
 
 	assert(
-		_interpolated_position_tracker != null,
-		"interpolated_position_tracker must not be null when source_position_mode is INTERPOLATED_POSITION."
+		_get_interpolated_position.is_valid(),
+		"get_interpolated_position must be valid when source_position_mode is INTERPOLATED_POSITION."
 	)
 
-	if _interpolated_position_tracker == null:
+	if not _get_interpolated_position.is_valid():
 		push_error(
-			"interpolated_position_tracker must not be null when source_position_mode is INTERPOLATED_POSITION."
+			"get_interpolated_position must be valid when source_position_mode is INTERPOLATED_POSITION."
 		)
 
 
@@ -115,8 +115,9 @@ func _get_source_global_position() -> Vector2:
 			return _source.global_position
 
 		SourcePositionMode.INTERPOLATED_POSITION:
-			if _interpolated_position_tracker != null:
-				return _interpolated_position_tracker.get_interpolated_global_position()
+			if _get_interpolated_position.is_valid():
+				var interpolated_position: Vector2 = _get_interpolated_position.call()
+				return interpolated_position
 
 			return _source.global_position
 

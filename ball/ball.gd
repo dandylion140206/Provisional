@@ -2,10 +2,11 @@ class_name Ball
 extends Node2D
 
 signal boosted
-signal speed_updated(speed: float)
 
 @export var seek_steering: SeekSteering
 @export var hit_stop_profile: HitStopProfile
+
+var _target_position := Vector2.ZERO
 
 @onready var hitbox: Hitbox = %Hitbox
 @onready var movement: Movement = %Movement
@@ -27,22 +28,30 @@ func _ready() -> void:
 	boost.boost_used.connect(_on_boost_used)
 	boost.boost_used.connect(hit_stop.cancel_deferred)
 
+	_target_position = global_position
+
 
 func _physics_process(delta: float) -> void:
 	if hit_stop.is_active():
-		_use_boost()
 		interpolated_position_tracker.update_tracking()
-		speed_updated.emit(movement.get_speed())
 		return
 
-	var target_position := get_global_mouse_position()
-
-	_update_velocity(target_position, delta)
-	_use_boost()
+	_update_velocity(_target_position, delta)
 	movement.move(delta)
 
 	interpolated_position_tracker.update_tracking()
-	speed_updated.emit(movement.get_speed())
+
+
+func set_target_position(target_position: Vector2) -> void:
+	_target_position = target_position
+
+
+func request_boost() -> void:
+	boost.use()
+
+
+func get_interpolated_global_position() -> Vector2:
+	return interpolated_position_tracker.get_interpolated_global_position()
 
 
 func _update_velocity(target_position: Vector2, delta: float) -> void:
@@ -54,11 +63,6 @@ func _update_velocity(target_position: Vector2, delta: float) -> void:
 	)
 
 	movement.set_velocity(new_velocity)
-
-
-func _use_boost() -> void:
-	if Input.is_action_just_pressed("primary_action"):
-		boost.use()
 
 
 func _on_boost_used() -> void:

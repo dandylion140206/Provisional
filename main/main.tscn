@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://b33kavqsjahjc" path="res://main/main.gd" id="1_ipbj0"]
 [ext_resource type="Script" uid="uid://bp1kypbjxpikr" path="res://debug/debug_controller.gd" id="2_ipbj0"]
 [ext_resource type="PackedScene" uid="uid://cg1ug3ry6a5x1" path="res://cursor/cursor.tscn" id="3_c2dye"]
+[ext_resource type="Script" uid="uid://02fcye2pf3k3" path="res://main/input_controller.gd" id="3_grrlh"]
 [ext_resource type="PackedScene" uid="uid://baj11f6v855i" path="res://ball/ball.tscn" id="4_n6juq"]
 [ext_resource type="PackedScene" uid="uid://bhkvgq3g5yshc" path="res://target/target.tscn" id="5_3wy1v"]
 [ext_resource type="Script" uid="uid://be6knta7t0vif" path="res://main/target_spawner.gd" id="6_kfbq2"]
@@ -18,11 +19,14 @@ metadata/_snap_enabled = true
 [sub_resource type="Gradient" id="Gradient_orjm5"]
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
 
-[node name="Main" type="Node" unique_id=1927368927]
+[node name="Main" type="Node2D" unique_id=764362608]
 script = ExtResource("1_ipbj0")
 
 [node name="DebugController" type="Node" parent="." unique_id=486050992]
 script = ExtResource("2_ipbj0")
+
+[node name="InputController" type="Node" parent="." unique_id=953981804]
+script = ExtResource("3_grrlh")
 
 [node name="TargetSpawner" type="Node2D" parent="." unique_id=713743795]
 script = ExtResource("6_kfbq2")
@@ -37,6 +41,10 @@ target_scene = ExtResource("5_3wy1v")
 [node name="BoostTrail" type="Node2D" parent="EffectsLayer" unique_id=134229688]
 unique_name_in_owner = true
 script = ExtResource("8_grrlh")
+boost_point_lifetime = null
+lifetime_increase_duration = null
+boost_trail_hold_duration = null
+lifetime_decrease_duration = null
 
 [node name="Trail" type="Line2D" parent="EffectsLayer/BoostTrail" unique_id=454232775]
 physics_interpolation_mode = 2

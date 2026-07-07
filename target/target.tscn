@@ -42,7 +42,6 @@ script = ExtResource("5_85njf")
 
 [node name="HealthBar" type="Node2D" parent="." unique_id=1574384955]
 unique_name_in_owner = true
-physics_interpolation_mode = 2
 z_index = 100
 z_as_relative = false
 position = Vector2(0, -55)
@@ -56,6 +55,7 @@ bus = &"SFX"
 [node name="DeathSound" type="AudioStreamPlayer2D" parent="." unique_id=958913157]
 unique_name_in_owner = true
 stream = ExtResource("8_n0ue5")
+volume_db = -2.0
 bus = &"SFX"
 
 [node name="HitStop" type="Node" parent="." unique_id=911343182]
