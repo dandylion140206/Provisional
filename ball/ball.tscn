@@ -37,10 +37,6 @@ shape = SubResource("CircleShape2D_ua4af")
 unique_name_in_owner = true
 script = ExtResource("3_6xd6y")
 
-[node name="InterpolatedPositionTracker" type="Node" parent="." unique_id=908929602]
-unique_name_in_owner = true
-script = ExtResource("7_melhi")
-
 [node name="HitStop" type="Node" parent="." unique_id=1979259650]
 unique_name_in_owner = true
 script = ExtResource("10_orjm5")
@@ -61,5 +57,9 @@ one_shot = true
 stream = ExtResource("6_r541t")
 volume_db = -2.0
 bus = &"SFX"
+
+[node name="InterpolatedPositionTracker" type="Node" parent="." unique_id=908929602]
+unique_name_in_owner = true
+script = ExtResource("7_melhi")
 
 [connection signal="boost_used" from="BallBoost" to="BallBoost/BoostSound" method="play"]

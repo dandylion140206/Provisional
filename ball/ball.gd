@@ -9,10 +9,10 @@ signal speed_updated(speed: float)
 
 @onready var hitbox: Hitbox = %Hitbox
 @onready var movement: Movement = %Movement
-@onready var interpolated_position_tracker: InterpolatedPositionTracker = %InterpolatedPositionTracker
 @onready var hit_stop: HitStop = %HitStop
 @onready var contact_damage: ContactDamage = %ContactDamage
 @onready var boost: BallBoost = %BallBoost
+@onready var interpolated_position_tracker: InterpolatedPositionTracker = %InterpolatedPositionTracker
 
 
 func _ready() -> void:

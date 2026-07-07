@@ -6,14 +6,13 @@ enum SourcePositionMode {
 	INTERPOLATED_POSITION,
 }
 
-@export var source: Node2D
-@export var source_position_tracker: InterpolatedPositionTracker
 @export var source_position_mode: SourcePositionMode = SourcePositionMode.SOURCE_POSITION
-
 @export_range(1, 500, 1) var max_points: int = 200
 @export_range(0.0, 32.0, 0.1) var min_distance: float = 4.0
 @export_range(0.0, 1.0, 0.01) var point_lifetime: float = 0.5
 
+var _source: Node2D
+var _interpolated_position_tracker: InterpolatedPositionTracker
 var _point_ages: Array[float] = []
 
 var _is_lifetime_transitioning := false
@@ -34,7 +33,7 @@ func _process(delta: float) -> void:
 	if point_lifetime <= 0.0:
 		return
 
-	if source == null:
+	if _source == null:
 		return
 
 	var local_point_position := to_local(_get_source_global_position())
@@ -53,20 +52,39 @@ func _process(delta: float) -> void:
 		_remove_oldest_point()
 
 
+func setup(
+	source: Node2D,
+	interpolated_position_tracker: InterpolatedPositionTracker = null
+) -> void:
+	assert(source != null, "source must not be null.")
+
+	_source = source
+	_interpolated_position_tracker = interpolated_position_tracker
+
+	_validate_interpolated_position_tracker()
+
+
 func clear_trail() -> void:
 	clear_points()
 	_point_ages.clear()
 
 
-func change_lifetime(value: float, duration: float) -> void:
+func set_point_lifetime(value: float) -> void:
 	if value < 0.0:
-		push_warning("Trail lifetime was clamped to 0.0.")
+		push_warning("Trail point_lifetime was clamped to 0.0.")
+
+	point_lifetime = maxf(value, 0.0)
+	_is_lifetime_transitioning = false
+
+
+func transition_point_lifetime(value: float, duration: float) -> void:
+	if value < 0.0:
+		push_warning("Trail point_lifetime transition target was clamped to 0.0.")
 
 	var target_lifetime := maxf(value, 0.0)
 
 	if duration <= 0.0:
-		point_lifetime = target_lifetime
-		_is_lifetime_transitioning = false
+		set_point_lifetime(target_lifetime)
 		return
 
 	_is_lifetime_transitioning = true
@@ -76,20 +94,34 @@ func change_lifetime(value: float, duration: float) -> void:
 	_lifetime_transition_elapsed = 0.0
 
 
+func _validate_interpolated_position_tracker() -> void:
+	if source_position_mode != SourcePositionMode.INTERPOLATED_POSITION:
+		return
+
+	assert(
+		_interpolated_position_tracker != null,
+		"interpolated_position_tracker must not be null when source_position_mode is INTERPOLATED_POSITION."
+	)
+
+	if _interpolated_position_tracker == null:
+		push_error(
+			"interpolated_position_tracker must not be null when source_position_mode is INTERPOLATED_POSITION."
+		)
+
+
 func _get_source_global_position() -> Vector2:
 	match source_position_mode:
 		SourcePositionMode.SOURCE_POSITION:
-			return source.global_position
+			return _source.global_position
 
 		SourcePositionMode.INTERPOLATED_POSITION:
-			if source_position_tracker != null:
-				return source_position_tracker.get_interpolated_global_position()
+			if _interpolated_position_tracker != null:
+				return _interpolated_position_tracker.get_interpolated_global_position()
 
-			push_warning("source_position_tracker is null. Falling back to source.global_position.")
-			return source.global_position
+			return _source.global_position
 
 		_:
-			return source.global_position
+			return _source.global_position
 
 
 func _update_lifetime_transition(delta: float) -> void:

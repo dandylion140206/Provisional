@@ -1,10 +1,13 @@
 extends Node
 
 @onready var ball: Ball = $Ball
-@onready var effects_layer: EffectsLayer = $EffectsLayer
+@onready var boost_trail: BoostTrail = %BoostTrail
 
 
 func _ready() -> void:
-	effects_layer.setup(ball)
+	boost_trail.setup(
+		ball,
+		ball.interpolated_position_tracker
+	)
 
-	ball.boosted.connect(effects_layer._on_boosted)
+	ball.boosted.connect(boost_trail.play_boost_trail)
