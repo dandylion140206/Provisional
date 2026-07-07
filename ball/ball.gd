@@ -9,6 +9,7 @@ signal speed_updated(speed: float)
 
 @onready var hitbox: Hitbox = %Hitbox
 @onready var movement: Movement = %Movement
+@onready var interpolated_position_tracker: InterpolatedPositionTracker = %InterpolatedPositionTracker
 @onready var hit_stop: HitStop = %HitStop
 @onready var contact_damage: ContactDamage = %ContactDamage
 @onready var boost: BallBoost = %BallBoost
@@ -20,6 +21,7 @@ func _ready() -> void:
 
 	movement.setup(self)
 	boost.setup(movement)
+	interpolated_position_tracker.setup(self)
 
 	hitbox.hit_detected.connect(_on_hit_detected)
 	boost.boost_used.connect(_on_boost_used)
@@ -29,6 +31,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if hit_stop.is_active():
 		_use_boost()
+		interpolated_position_tracker.update_tracking()
 		speed_updated.emit(movement.get_speed())
 		return
 
@@ -38,6 +41,7 @@ func _physics_process(delta: float) -> void:
 	_use_boost()
 	movement.move(delta)
 
+	interpolated_position_tracker.update_tracking()
 	speed_updated.emit(movement.get_speed())
 
 

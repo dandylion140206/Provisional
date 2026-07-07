@@ -1,26 +1,43 @@
 class_name Trail
 extends Line2D
 
-@export var target: Node2D
+enum SourcePositionMode {
+	SOURCE_POSITION,
+	INTERPOLATED_POSITION,
+}
+
+@export var source: Node2D
+@export var source_position_tracker: InterpolatedPositionTracker
+@export var source_position_mode: SourcePositionMode = SourcePositionMode.SOURCE_POSITION
+
 @export_range(1, 500, 1) var max_points: int = 200
 @export_range(0.0, 32.0, 0.1) var min_distance: float = 4.0
-@export_range(0.0, 1.0, 0.01) var point_lifetime: float = 0.3
+@export_range(0.0, 1.0, 0.01) var point_lifetime: float = 0.5
 
 var _point_ages: Array[float] = []
 
+var _is_lifetime_transitioning := false
+var _lifetime_transition_start := 0.0
+var _lifetime_transition_target := 0.0
+var _lifetime_transition_duration := 0.0
+var _lifetime_transition_elapsed := 0.0
+
 
 func _ready() -> void:
-	clear_points()
-	_point_ages.clear()
+	clear_trail()
 
 
 func _process(delta: float) -> void:
+	_update_lifetime_transition(delta)
 	_update_point_ages(delta)
 
-	if target == null:
+	if point_lifetime <= 0.0:
 		return
 
-	var local_point_position := to_local(target.global_position)
+	if source == null:
+		return
+
+	var local_point_position := to_local(_get_source_global_position())
 	var point_count := get_point_count()
 
 	if point_count > 0:
@@ -36,9 +53,63 @@ func _process(delta: float) -> void:
 		_remove_oldest_point()
 
 
-func reset_trail() -> void:
+func clear_trail() -> void:
 	clear_points()
 	_point_ages.clear()
+
+
+func change_lifetime(value: float, duration: float) -> void:
+	if value < 0.0:
+		push_warning("Trail lifetime was clamped to 0.0.")
+
+	var target_lifetime := maxf(value, 0.0)
+
+	if duration <= 0.0:
+		point_lifetime = target_lifetime
+		_is_lifetime_transitioning = false
+		return
+
+	_is_lifetime_transitioning = true
+	_lifetime_transition_start = point_lifetime
+	_lifetime_transition_target = target_lifetime
+	_lifetime_transition_duration = duration
+	_lifetime_transition_elapsed = 0.0
+
+
+func _get_source_global_position() -> Vector2:
+	match source_position_mode:
+		SourcePositionMode.SOURCE_POSITION:
+			return source.global_position
+
+		SourcePositionMode.INTERPOLATED_POSITION:
+			if source_position_tracker != null:
+				return source_position_tracker.get_interpolated_global_position()
+
+			push_warning("source_position_tracker is null. Falling back to source.global_position.")
+			return source.global_position
+
+		_:
+			return source.global_position
+
+
+func _update_lifetime_transition(delta: float) -> void:
+	if not _is_lifetime_transitioning:
+		return
+
+	_lifetime_transition_elapsed += delta
+
+	var progress := _lifetime_transition_elapsed / _lifetime_transition_duration
+	progress = clampf(progress, 0.0, 1.0)
+
+	point_lifetime = lerpf(
+		_lifetime_transition_start,
+		_lifetime_transition_target,
+		progress
+	)
+
+	if progress >= 1.0:
+		point_lifetime = _lifetime_transition_target
+		_is_lifetime_transitioning = false
 
 
 func _update_point_ages(delta: float) -> void:
