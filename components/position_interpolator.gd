@@ -1,4 +1,4 @@
-class_name InterpolatedPositionTracker
+class_name PositionInterpolator
 extends Node
 
 var _source: Node2D
@@ -10,10 +10,10 @@ func setup(source: Node2D) -> void:
 	assert(source != null, "source must not be null.")
 
 	_source = source
-	reset_tracking()
+	reset()
 
 
-func update_tracking() -> void:
+func record_position() -> void:
 	if _source == null:
 		return
 
@@ -21,7 +21,7 @@ func update_tracking() -> void:
 	_current_physics_position = _source.global_position
 
 
-func reset_tracking() -> void:
+func reset() -> void:
 	if _source == null:
 		return
 

@@ -13,7 +13,7 @@ var _target_position := Vector2.ZERO
 @onready var hit_stop: HitStop = %HitStop
 @onready var contact_damage: ContactDamage = %ContactDamage
 @onready var boost: BallBoost = %BallBoost
-@onready var interpolated_position_tracker: InterpolatedPositionTracker = %InterpolatedPositionTracker
+@onready var position_interpolator: PositionInterpolator = %PositionInterpolator
 
 
 func _ready() -> void:
@@ -22,7 +22,7 @@ func _ready() -> void:
 
 	movement.setup(self)
 	boost.setup(movement)
-	interpolated_position_tracker.setup(self)
+	position_interpolator.setup(self)
 
 	hitbox.hit_detected.connect(_on_hit_detected)
 	boost.boost_used.connect(_on_boost_used)
@@ -33,13 +33,13 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if hit_stop.is_active():
-		interpolated_position_tracker.update_tracking()
+		position_interpolator.record_position()
 		return
 
 	_update_velocity(_target_position, delta)
 	movement.move(delta)
 
-	interpolated_position_tracker.update_tracking()
+	position_interpolator.record_position()
 
 
 func set_target_position(target_position: Vector2) -> void:
@@ -51,7 +51,7 @@ func request_boost() -> void:
 
 
 func get_interpolated_global_position() -> Vector2:
-	return interpolated_position_tracker.get_interpolated_global_position()
+	return position_interpolator.get_interpolated_global_position()
 
 
 func _update_velocity(target_position: Vector2, delta: float) -> void:
