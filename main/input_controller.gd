@@ -4,6 +4,9 @@ extends Node
 signal boost_requested
 
 
-func _process(_delta: float) -> void:
-	if Input.is_action_just_pressed("primary_action"):
-		boost_requested.emit()
+func _unhandled_input(event: InputEvent) -> void:
+	if not event.is_action_pressed("primary_action"):
+		return
+
+	boost_requested.emit()
+	get_viewport().set_input_as_handled()

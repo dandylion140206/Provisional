@@ -5,13 +5,13 @@ signal boosted
 
 @export var seek_steering: SeekSteering
 @export var hit_stop_profile: HitStopProfile
+@export var contact_damage_profile: ContactDamageProfile
 
 var _target_position := Vector2.ZERO
 
 @onready var hitbox: Hitbox = %Hitbox
 @onready var movement: Movement = %Movement
 @onready var hit_stop: HitStop = %HitStop
-@onready var contact_damage: ContactDamage = %ContactDamage
 @onready var boost: BallBoost = %BallBoost
 @onready var position_interpolator: PositionInterpolator = %PositionInterpolator
 
@@ -19,6 +19,10 @@ var _target_position := Vector2.ZERO
 func _ready() -> void:
 	assert(seek_steering != null, "seek_steering must not be null.")
 	assert(hit_stop_profile != null, "hit_stop_profile must not be null.")
+	assert(
+		contact_damage_profile != null,
+		"contact_damage_profile must not be null."
+	)
 
 	movement.setup(self)
 	boost.setup(movement)
@@ -74,7 +78,7 @@ func _on_hit_detected(hurtbox: Hurtbox) -> void:
 		return
 
 	var speed := movement.get_speed()
-	var damage_amount := contact_damage.calculate_damage(speed)
+	var damage_amount := contact_damage_profile.calculate_damage(speed)
 	var hit_stop_duration := hit_stop_profile.get_duration(speed)
 
 	hurtbox.receive_hit(damage_amount, speed)

@@ -30,6 +30,7 @@ script = ExtResource("2_ipbj0")
 script = ExtResource("3_grrlh")
 
 [node name="TargetSpawner" type="Node2D" parent="." unique_id=713743795]
+y_sort_enabled = true
 script = ExtResource("6_kfbq2")
 target_scene = ExtResource("5_3wy1v")
 

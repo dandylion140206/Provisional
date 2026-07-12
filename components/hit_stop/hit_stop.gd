@@ -32,7 +32,7 @@ func cancel() -> void:
 
 
 func cancel_deferred() -> void:
-	call_deferred("cancel")
+	cancel.call_deferred()
 
 
 func is_active() -> bool:
