@@ -7,17 +7,6 @@
 [ext_resource type="PackedScene" uid="uid://baj11f6v855i" path="res://ball/ball.tscn" id="4_n6juq"]
 [ext_resource type="PackedScene" uid="uid://bhkvgq3g5yshc" path="res://target/target.tscn" id="5_3wy1v"]
 [ext_resource type="Script" uid="uid://be6knta7t0vif" path="res://main/target_spawner.gd" id="6_kfbq2"]
-[ext_resource type="Script" uid="uid://b3ye53qcjhqid" path="res://components/effects/trail.gd" id="7_4dugh"]
-[ext_resource type="Script" uid="uid://svpwvxd17hmo" path="res://effects/boost_trail.gd" id="8_grrlh"]
-
-[sub_resource type="Curve" id="Curve_67ri8"]
-_data = [Vector2(0, 0), 0.0, 1.2453185, 0, 0, Vector2(1, 1), 0.6404491, 0.0, 0, 0]
-point_count = 2
-metadata/_snap_count = 50
-metadata/_snap_enabled = true
-
-[sub_resource type="Gradient" id="Gradient_orjm5"]
-colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
 
 [node name="Main" type="Node2D" unique_id=764362608]
 physics_interpolation_mode = 2
@@ -33,24 +22,7 @@ script = ExtResource("3_grrlh")
 y_sort_enabled = true
 script = ExtResource("6_kfbq2")
 target_scene = ExtResource("5_3wy1v")
-target_count = 1
 
 [node name="Cursor" parent="." unique_id=413606096 instance=ExtResource("3_c2dye")]
 
 [node name="Ball" parent="." unique_id=698706806 instance=ExtResource("4_n6juq")]
-
-[node name="EffectsLayer" type="Node2D" parent="." unique_id=1378478455]
-
-[node name="BoostTrail" type="Node2D" parent="EffectsLayer" unique_id=134229688]
-unique_name_in_owner = true
-script = ExtResource("8_grrlh")
-
-[node name="Trail" type="Line2D" parent="EffectsLayer/BoostTrail" unique_id=454232775]
-physics_interpolation_mode = 2
-width = 40.0
-width_curve = SubResource("Curve_67ri8")
-gradient = SubResource("Gradient_orjm5")
-joint_mode = 2
-begin_cap_mode = 2
-script = ExtResource("7_4dugh")
-source_position_mode = 1

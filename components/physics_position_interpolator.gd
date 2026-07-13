@@ -1,4 +1,4 @@
-class_name PositionInterpolator
+class_name PhysicsPositionInterpolator
 extends Node
 
 var _source: Node2D
@@ -14,16 +14,14 @@ func setup(source: Node2D) -> void:
 
 
 func record_position() -> void:
-	if _source == null:
-		return
+	assert(_source != null, "PhysicsPositionInterpolator must be setup before record_position().")
 
 	_previous_physics_position = _current_physics_position
 	_current_physics_position = _source.global_position
 
 
 func reset() -> void:
-	if _source == null:
-		return
+	assert(_source != null, "PhysicsPositionInterpolator must be setup before reset().")
 
 	_previous_physics_position = _source.global_position
 	_current_physics_position = _source.global_position
@@ -31,7 +29,10 @@ func reset() -> void:
 
 
 func get_interpolated_global_position() -> Vector2:
+	assert(_source != null, "PhysicsPositionInterpolator must be setup before getting a position.")
+
 	var interpolation_fraction := Engine.get_physics_interpolation_fraction()
+
 	return _previous_physics_position.lerp(
 		_current_physics_position,
 		interpolation_fraction

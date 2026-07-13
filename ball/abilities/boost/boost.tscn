@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://cherfu7ivdcyx"]
+
+[ext_resource type="Script" uid="uid://0xh102dl4abt" path="res://ball/abilities/boost/boost.gd" id="1_ra6ms"]
+[ext_resource type="AudioStream" uid="uid://c1k0prxqnpsex" path="res://assets/sfx/ブースト/DSGNMisc_HIT-Synth Hit_HY_PC-001.wav" id="2_c2dil"]
+[ext_resource type="Script" uid="uid://svpwvxd17hmo" path="res://ball/abilities/boost/boost_trail.gd" id="3_rp6jb"]
+[ext_resource type="Script" uid="uid://b3ye53qcjhqid" path="res://components/effects/trail.gd" id="4_krgfj"]
+
+[sub_resource type="Curve" id="Curve_25t5i"]
+_data = [Vector2(0, 0), 0.0, 1.2453185, 0, 0, Vector2(1, 1), 0.6404491, 0.0, 0, 0]
+point_count = 2
+metadata/_snap_count = 50
+metadata/_snap_enabled = true
+
+[sub_resource type="Gradient" id="Gradient_ubwg0"]
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
+
+[node name="Boost" type="Node2D" unique_id=293315367]
+physics_interpolation_mode = 2
+script = ExtResource("1_ra6ms")
+
+[node name="CooldownTimer" type="Timer" parent="." unique_id=116471577]
+one_shot = true
+
+[node name="Sound" type="AudioStreamPlayer2D" parent="." unique_id=814106714]
+stream = ExtResource("2_c2dil")
+volume_db = -2.0
+bus = &"SFX"
+
+[node name="BoostTrail" type="Node2D" parent="." unique_id=157861159]
+unique_name_in_owner = true
+top_level = true
+script = ExtResource("3_rp6jb")
+
+[node name="Trail" type="Line2D" parent="BoostTrail" unique_id=547840986]
+physics_interpolation_mode = 2
+width = 40.0
+width_curve = SubResource("Curve_25t5i")
+gradient = SubResource("Gradient_ubwg0")
+joint_mode = 2
+begin_cap_mode = 2
+script = ExtResource("4_krgfj")
+source_position_mode = 1
+
+[connection signal="activated" from="." to="Sound" method="play"]

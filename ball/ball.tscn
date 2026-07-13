@@ -1,16 +1,15 @@
 [gd_scene format=3 uid="uid://baj11f6v855i"]
 
 [ext_resource type="Script" uid="uid://g3hjyqdduhw0" path="res://ball/ball.gd" id="1_6plaf"]
-[ext_resource type="Resource" uid="uid://box7n6kkqfsn3" path="res://components/movement/seek_steering.tres" id="2_pwunn"]
-[ext_resource type="Script" uid="uid://cmfnqgmqx1sow" path="res://components/movement/movement.gd" id="3_6xd6y"]
+[ext_resource type="Script" uid="uid://cmfnqgmqx1sow" path="res://components/movement.gd" id="3_6xd6y"]
 [ext_resource type="Script" uid="uid://b3mrwkpsh0eno" path="res://components/circle_visual.gd" id="3_biv8x"]
 [ext_resource type="Resource" uid="uid://cuiytnj5pmta1" path="res://ball/ball_hit_stop_profile.tres" id="3_melhi"]
-[ext_resource type="Resource" uid="uid://dsty67rmayaal" path="res://ball/ball_contact_damage_profile.tres" id="4_melhi"]
 [ext_resource type="Script" uid="uid://baeqwfpgl2bo3" path="res://components/damage/hitbox.gd" id="4_vf1tv"]
-[ext_resource type="Script" uid="uid://bjnyisktek3ev" path="res://ball/ball_boost.gd" id="5_0p2w7"]
-[ext_resource type="AudioStream" uid="uid://c1k0prxqnpsex" path="res://assets/sfx/ブースト/DSGNMisc_HIT-Synth Hit_HY_PC-001.wav" id="6_r541t"]
-[ext_resource type="Script" uid="uid://bn7xq3fsmvk0r" path="res://components/position_interpolator.gd" id="7_melhi"]
+[ext_resource type="Script" uid="uid://bn7xq3fsmvk0r" path="res://components/physics_position_interpolator.gd" id="7_melhi"]
+[ext_resource type="Script" uid="uid://oe380rp2tbea" path="res://components/damage/contact_damage.gd" id="7_w6tmd"]
+[ext_resource type="Script" uid="uid://gxrfd04hun14" path="res://ball/abilities/ability_controller.gd" id="9_melhi"]
 [ext_resource type="Script" uid="uid://cyv0rwf4lf2bv" path="res://components/hit_stop/hit_stop.gd" id="10_orjm5"]
+[ext_resource type="PackedScene" uid="uid://cherfu7ivdcyx" path="res://ball/abilities/boost/boost.tscn" id="10_w6tmd"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ua4af"]
 radius = 20.0
@@ -19,9 +18,7 @@ radius = 20.0
 physics_interpolation_mode = 1
 z_index = 10
 script = ExtResource("1_6plaf")
-seek_steering = ExtResource("2_pwunn")
 hit_stop_profile = ExtResource("3_melhi")
-contact_damage_profile = ExtResource("4_melhi")
 
 [node name="Visual" type="Node2D" parent="." unique_id=125996670]
 script = ExtResource("3_biv8x")
@@ -29,6 +26,7 @@ metadata/_custom_type_script = "uid://b3mrwkpsh0eno"
 
 [node name="Hitbox" type="Area2D" parent="." unique_id=1563584028]
 unique_name_in_owner = true
+visible = false
 collision_mask = 2
 script = ExtResource("4_vf1tv")
 
@@ -39,25 +37,19 @@ shape = SubResource("CircleShape2D_ua4af")
 unique_name_in_owner = true
 script = ExtResource("3_6xd6y")
 
+[node name="ContactDamage" type="Node" parent="." unique_id=1609352213]
+unique_name_in_owner = true
+script = ExtResource("7_w6tmd")
+
 [node name="HitStop" type="Node" parent="." unique_id=1979259650]
 unique_name_in_owner = true
 script = ExtResource("10_orjm5")
 
-[node name="BallBoost" type="Node2D" parent="." unique_id=686657638]
+[node name="AbilityController" type="Node2D" parent="." unique_id=1095826231]
 unique_name_in_owner = true
-script = ExtResource("5_0p2w7")
+script = ExtResource("9_melhi")
+initial_active_ability_scene = ExtResource("10_w6tmd")
 
-[node name="CooldownTimer" type="Timer" parent="BallBoost" unique_id=893500511]
-one_shot = true
-
-[node name="BoostSound" type="AudioStreamPlayer2D" parent="BallBoost" unique_id=379679797]
-unique_name_in_owner = true
-stream = ExtResource("6_r541t")
-volume_db = -2.0
-bus = &"SFX"
-
-[node name="PositionInterpolator" type="Node" parent="." unique_id=908929602]
+[node name="PhysicsPositionInterpolator" type="Node" parent="." unique_id=908929602]
 unique_name_in_owner = true
 script = ExtResource("7_melhi")
-
-[connection signal="boost_used" from="." to="BallBoost/BoostSound" method="play"]

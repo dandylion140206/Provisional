@@ -1,83 +1,69 @@
 class_name Ball
 extends Node2D
 
-signal boost_used
+signal active_ability_activated
 
-@export var seek_steering: SeekSteering
 @export var hit_stop_profile: HitStopProfile
-@export var contact_damage_profile: ContactDamageProfile
 
 var _target_position := Vector2.ZERO
 
 @onready var hitbox: Hitbox = %Hitbox
 @onready var movement: Movement = %Movement
+@onready var contact_damage: ContactDamage = %ContactDamage
 @onready var hit_stop: HitStop = %HitStop
-@onready var boost: BallBoost = %BallBoost
-@onready var position_interpolator: PositionInterpolator = %PositionInterpolator
+@onready var ability_controller: AbilityController = %AbilityController
+@onready var physics_position_interpolator: PhysicsPositionInterpolator = %PhysicsPositionInterpolator
 
 
 func _ready() -> void:
-	assert(seek_steering != null, "seek_steering must not be null.")
 	assert(hit_stop_profile != null, "hit_stop_profile must not be null.")
-	assert(
-		contact_damage_profile != null,
-		"contact_damage_profile must not be null."
-	)
 
 	movement.setup(self)
-	boost.setup(movement)
-	position_interpolator.setup(self)
+	contact_damage.setup(movement.get_speed)
+	physics_position_interpolator.setup(self)
 
-	hitbox.hit_detected.connect(_on_hit_detected)
+	var ability_context := AbilityContext.new(
+		self,
+		movement,
+		hit_stop.cancel_deferred,
+		get_interpolated_global_position
+	)
+	ability_controller.setup(ability_context)
+
+	hitbox.hit_detected.connect(contact_damage.apply_hit)
+	contact_damage.hit_applied.connect(_on_contact_damage_hit_applied)
+	ability_controller.active_ability_activated.connect(active_ability_activated.emit)
 
 	_target_position = global_position
 
 
 func _physics_process(delta: float) -> void:
 	if hit_stop.is_active():
-		position_interpolator.record_position()
+		physics_position_interpolator.record_position()
 		return
 
-	_update_velocity(_target_position, delta)
+	movement.update_velocity(
+		global_position,
+		_target_position,
+		delta
+	)
 	movement.move(delta)
 
-	position_interpolator.record_position()
+	physics_position_interpolator.record_position()
 
 
 func set_target_position(target_position: Vector2) -> void:
 	_target_position = target_position
 
 
-func request_boost() -> void:
-	if not boost.try_use():
-		return
-
-	hit_stop.cancel_deferred()
-	boost_used.emit()
+func request_active_ability() -> bool:
+	return ability_controller.try_activate()
 
 
 func get_interpolated_global_position() -> Vector2:
-	return position_interpolator.get_interpolated_global_position()
+	return physics_position_interpolator.get_interpolated_global_position()
 
 
-func _update_velocity(target_position: Vector2, delta: float) -> void:
-	var new_velocity := seek_steering.calculate_velocity(
-		movement.get_velocity(),
-		global_position,
-		target_position,
-		delta
-	)
-
-	movement.set_velocity(new_velocity)
-
-
-func _on_hit_detected(hurtbox: Hurtbox) -> void:
-	if hurtbox == null:
-		return
-
-	var speed := movement.get_speed()
-	var damage_amount := contact_damage_profile.calculate_damage(speed)
+func _on_contact_damage_hit_applied(speed: float) -> void:
 	var hit_stop_duration := hit_stop_profile.get_duration(speed)
-
-	hurtbox.receive_hit(damage_amount, speed)
 	hit_stop.start(hit_stop_duration)
