@@ -1,8 +1,6 @@
 class_name BallBoost
 extends Node2D
 
-signal boost_used
-
 @export_range(0.0, 5000.0, 10.0) var boost_speed: float = 1700.0
 @export_range(0.0, 2.0, 0.01) var cooldown: float = 0.4
 
@@ -20,23 +18,23 @@ func setup(movement: Movement) -> void:
 	_cooldown_timer.wait_time = cooldown
 
 
-func use() -> void:
-	assert(_movement != null, "movement must be setup before use().")
+func try_use() -> bool:
+	assert(_movement != null, "movement must be setup before try_use().")
 
 	if not _can_use():
-		return
+		return false
 
 	var velocity := _movement.get_velocity()
 
 	if velocity.is_zero_approx():
-		return
+		return false
 
 	var boost_velocity := velocity.normalized() * boost_speed
 
 	_movement.add_velocity(boost_velocity)
 	_cooldown_timer.start()
 
-	boost_used.emit()
+	return true
 
 
 func _can_use() -> bool:

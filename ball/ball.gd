@@ -1,7 +1,7 @@
 class_name Ball
 extends Node2D
 
-signal boosted
+signal boost_used
 
 @export var seek_steering: SeekSteering
 @export var hit_stop_profile: HitStopProfile
@@ -29,8 +29,6 @@ func _ready() -> void:
 	position_interpolator.setup(self)
 
 	hitbox.hit_detected.connect(_on_hit_detected)
-	boost.boost_used.connect(_on_boost_used)
-	boost.boost_used.connect(hit_stop.cancel_deferred)
 
 	_target_position = global_position
 
@@ -51,7 +49,11 @@ func set_target_position(target_position: Vector2) -> void:
 
 
 func request_boost() -> void:
-	boost.use()
+	if not boost.try_use():
+		return
+
+	hit_stop.cancel_deferred()
+	boost_used.emit()
 
 
 func get_interpolated_global_position() -> Vector2:
@@ -67,10 +69,6 @@ func _update_velocity(target_position: Vector2, delta: float) -> void:
 	)
 
 	movement.set_velocity(new_velocity)
-
-
-func _on_boost_used() -> void:
-	boosted.emit()
 
 
 func _on_hit_detected(hurtbox: Hurtbox) -> void:

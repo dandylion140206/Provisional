@@ -51,6 +51,7 @@ script = ExtResource("5_0p2w7")
 one_shot = true
 
 [node name="BoostSound" type="AudioStreamPlayer2D" parent="BallBoost" unique_id=379679797]
+unique_name_in_owner = true
 stream = ExtResource("6_r541t")
 volume_db = -2.0
 bus = &"SFX"
@@ -59,4 +60,4 @@ bus = &"SFX"
 unique_name_in_owner = true
 script = ExtResource("7_melhi")
 
-[connection signal="boost_used" from="BallBoost" to="BallBoost/BoostSound" method="play"]
+[connection signal="boost_used" from="." to="BallBoost/BoostSound" method="play"]

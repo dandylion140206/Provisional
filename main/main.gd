@@ -9,7 +9,7 @@ func _ready() -> void:
 	boost_trail.setup(ball)
 
 	input_controller.boost_requested.connect(ball.request_boost)
-	ball.boosted.connect(boost_trail.play_boost_trail)
+	ball.boost_used.connect(boost_trail.play_boost_trail)
 
 	ball.set_target_position(get_global_mouse_position())
 

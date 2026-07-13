@@ -33,6 +33,7 @@ script = ExtResource("3_grrlh")
 y_sort_enabled = true
 script = ExtResource("6_kfbq2")
 target_scene = ExtResource("5_3wy1v")
+target_count = 1
 
 [node name="Cursor" parent="." unique_id=413606096 instance=ExtResource("3_c2dye")]
 
