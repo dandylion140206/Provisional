@@ -18,13 +18,13 @@ func _process(delta: float) -> void:
 
 func setup(
 	source: Node2D,
-	get_interpolated_position: Callable
+	get_interpolated_global_position: Callable
 ) -> void:
 	assert(source != null, "source must not be null.")
-	assert(get_interpolated_position.is_valid(), "get_interpolated_position must be valid.")
+	assert(get_interpolated_global_position.is_valid(), "get_interpolated_global_position must be valid.")
 	assert(trail != null, "Trail child node must not be null.")
 
-	trail.setup(source, get_interpolated_position)
+	trail.setup(source, get_interpolated_global_position)
 	trail.set_point_lifetime(0.0)
 	trail.clear_trail()
 

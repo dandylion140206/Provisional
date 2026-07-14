@@ -1,6 +1,7 @@
 class_name Ball
 extends Node2D
 
+signal hit_landed(hit_data: HitData)
 signal active_ability_activated
 
 var _target_position := Vector2.ZERO
@@ -62,3 +63,4 @@ func get_interpolated_global_position() -> Vector2:
 
 func _on_hit_landed(hit_data: HitData) -> void:
 	hit_stop.start(hit_data.attacker_hit_stop_duration)
+	hit_landed.emit(hit_data)

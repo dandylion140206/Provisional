@@ -1,16 +1,31 @@
 [gd_scene format=3 uid="uid://uiulovu4jc4r"]
 
 [ext_resource type="Script" uid="uid://b33kavqsjahjc" path="res://main/main.gd" id="1_ipbj0"]
-[ext_resource type="Script" uid="uid://bp1kypbjxpikr" path="res://debug/debug_controller.gd" id="2_ipbj0"]
+[ext_resource type="Shader" uid="uid://efcd8y1ki25f" path="res://components/background/checkboard_background.gdshader" id="2_bsumw"]
+[ext_resource type="Script" uid="uid://bp1kypbjxpikr" path="res://_debug/debug_controller.gd" id="2_ipbj0"]
 [ext_resource type="PackedScene" uid="uid://cg1ug3ry6a5x1" path="res://cursor/cursor.tscn" id="3_c2dye"]
+[ext_resource type="Script" uid="uid://brlgnkqw8xfsb" path="res://components/background/checkerboard_background.gd" id="3_fwcvl"]
 [ext_resource type="Script" uid="uid://02fcye2pf3k3" path="res://main/input_controller.gd" id="3_grrlh"]
 [ext_resource type="PackedScene" uid="uid://baj11f6v855i" path="res://ball/ball.tscn" id="4_n6juq"]
 [ext_resource type="PackedScene" uid="uid://bhkvgq3g5yshc" path="res://target/target.tscn" id="5_3wy1v"]
 [ext_resource type="Script" uid="uid://be6knta7t0vif" path="res://main/target_spawner.gd" id="6_kfbq2"]
+[ext_resource type="Script" uid="uid://d0yihjvph111e" path="res://camera/camera_shake.gd" id="8_67ri8"]
+[ext_resource type="Script" uid="uid://cb4ft125etweq" path="res://camera/impact_camera_shake.gd" id="9_grrlh"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_na0o7"]
+shader = ExtResource("2_bsumw")
+shader_parameter/dark_color = Color(0.2024, 0.20654, 0.23, 1)
+shader_parameter/light_color = Color(0.2464, 0.25480002, 0.28, 1)
+shader_parameter/cell_size = 84.0
 
 [node name="Main" type="Node2D" unique_id=764362608]
 physics_interpolation_mode = 2
 script = ExtResource("1_ipbj0")
+
+[node name="CheckerboardBackground" type="ColorRect" parent="." unique_id=1515908873]
+material = SubResource("ShaderMaterial_na0o7")
+script = ExtResource("3_fwcvl")
+coverage_size = Vector2(700, 500)
 
 [node name="DebugController" type="Node" parent="." unique_id=486050992]
 script = ExtResource("2_ipbj0")
@@ -26,3 +41,19 @@ target_scene = ExtResource("5_3wy1v")
 [node name="Cursor" parent="." unique_id=413606096 instance=ExtResource("3_c2dye")]
 
 [node name="Ball" parent="." unique_id=698706806 instance=ExtResource("4_n6juq")]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1383456107]
+offset = Vector2(960, 540)
+ignore_rotation = false
+
+[node name="CameraShake" type="Node" parent="Camera2D" unique_id=996526789]
+unique_name_in_owner = true
+script = ExtResource("8_67ri8")
+trauma_decay_rate = 4.5
+trauma_power = 1.5
+
+[node name="ImpactCameraShake" type="Node" parent="Camera2D/CameraShake" unique_id=1642740481]
+unique_name_in_owner = true
+script = ExtResource("9_grrlh")
+min_shake_speed = 0.0
+trauma_at_max_speed = 0.8
