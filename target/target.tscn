@@ -11,7 +11,7 @@
 [ext_resource type="Script" uid="uid://cyv0rwf4lf2bv" path="res://components/hit/hit_stop.gd" id="9_fash6"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ua4af"]
-radius = 40.0
+radius = 42.0
 
 [node name="Target" type="Node2D" unique_id=1674259745]
 physics_interpolation_mode = 2
@@ -20,6 +20,7 @@ script = ExtResource("1_6nu6o")
 [node name="Visual" type="Node2D" parent="." unique_id=1265824670]
 unique_name_in_owner = true
 script = ExtResource("2_itqbd")
+radius = 42.0
 
 [node name="HitFlash" type="Node" parent="Visual" unique_id=493912912]
 unique_name_in_owner = true

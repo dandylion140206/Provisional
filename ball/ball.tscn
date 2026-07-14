@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://cherfu7ivdcyx" path="res://ball/abilities/boost/boost.tscn" id="10_w6tmd"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ua4af"]
-radius = 20.0
+radius = 21.0
 
 [node name="Ball" type="Node2D" unique_id=698706806]
 physics_interpolation_mode = 1
@@ -20,6 +20,7 @@ script = ExtResource("1_6plaf")
 
 [node name="Visual" type="Node2D" parent="." unique_id=125996670]
 script = ExtResource("3_biv8x")
+radius = 21.0
 metadata/_custom_type_script = "uid://b3mrwkpsh0eno"
 
 [node name="Hitbox" type="Area2D" parent="." unique_id=1563584028]

@@ -14,9 +14,11 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_na0o7"]
 shader = ExtResource("2_bsumw")
-shader_parameter/dark_color = Color(0.2024, 0.20654, 0.23, 1)
-shader_parameter/light_color = Color(0.2464, 0.25480002, 0.28, 1)
+shader_parameter/dark_color = Color(0.188825, 0.18689999, 0.21, 1)
+shader_parameter/light_color = Color(0.2136, 0.2136, 0.24, 1)
 shader_parameter/cell_size = 84.0
+shader_parameter/edge_softness = 4.0000000596048
+shader_parameter/pattern_center = Vector2(960, 540)
 
 [node name="Main" type="Node2D" unique_id=764362608]
 physics_interpolation_mode = 2
@@ -25,7 +27,7 @@ script = ExtResource("1_ipbj0")
 [node name="CheckerboardBackground" type="ColorRect" parent="." unique_id=1515908873]
 material = SubResource("ShaderMaterial_na0o7")
 script = ExtResource("3_fwcvl")
-coverage_size = Vector2(700, 500)
+coverage_size = Vector2(3840, 2160)
 
 [node name="DebugController" type="Node" parent="." unique_id=486050992]
 script = ExtResource("2_ipbj0")

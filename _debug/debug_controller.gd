@@ -2,7 +2,7 @@ class_name DebugController
 extends Node
 
 @export var enabled: bool = true
-@export_range(0.05, 1.0, 0.05) var slow_time_scale: float = 0.35
+@export_range(0.05, 1.0, 0.05) var slow_time_scale: float = 0.25
 @export var slow_key: Key = KEY_SHIFT
 
 

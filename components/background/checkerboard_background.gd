@@ -10,7 +10,7 @@ func _ready() -> void:
 		"coverage_size must be greater than zero."
 	)
 
-	position = Vector2(960, 540)
+	position = -coverage_size * 0.5
 	size = coverage_size
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	z_index = -100
