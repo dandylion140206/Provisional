@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://cherfu7ivdcyx"]
 
-[ext_resource type="Script" uid="uid://0xh102dl4abt" path="res://ball/abilities/boost/boost.gd" id="1_ra6ms"]
+[ext_resource type="Script" uid="uid://0xh102dl4abt" path="res://game/ball/abilities/boost/boost.gd" id="1_ra6ms"]
 [ext_resource type="AudioStream" uid="uid://c1k0prxqnpsex" path="res://assets/sfx/ブースト/DSGNMisc_HIT-Synth Hit_HY_PC-001.wav" id="2_c2dil"]
-[ext_resource type="Script" uid="uid://svpwvxd17hmo" path="res://ball/abilities/boost/boost_trail.gd" id="3_rp6jb"]
-[ext_resource type="Script" uid="uid://b3ye53qcjhqid" path="res://components/effects/trail.gd" id="4_krgfj"]
+[ext_resource type="Script" uid="uid://svpwvxd17hmo" path="res://game/ball/abilities/boost/boost_trail.gd" id="3_c2dil"]
+[ext_resource type="Script" uid="uid://b3ye53qcjhqid" path="res://visuals/effects/trail.gd" id="4_rp6jb"]
 
 [sub_resource type="Curve" id="Curve_25t5i"]
 _data = [Vector2(0, 0), 0.0, 1.2453185, 0, 0, Vector2(1, 1), 0.6404491, 0.0, 0, 0]
@@ -29,7 +29,7 @@ bus = &"SFX"
 [node name="BoostTrail" type="Node2D" parent="." unique_id=157861159]
 unique_name_in_owner = true
 top_level = true
-script = ExtResource("3_rp6jb")
+script = ExtResource("3_c2dil")
 
 [node name="Trail" type="Line2D" parent="BoostTrail" unique_id=547840986]
 physics_interpolation_mode = 2
@@ -38,7 +38,7 @@ width_curve = SubResource("Curve_25t5i")
 gradient = SubResource("Gradient_ubwg0")
 joint_mode = 2
 begin_cap_mode = 2
-script = ExtResource("4_krgfj")
+script = ExtResource("4_rp6jb")
 source_position_mode = 1
 
 [connection signal="activated" from="." to="Sound" method="play"]

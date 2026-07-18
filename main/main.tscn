@@ -2,15 +2,15 @@
 
 [ext_resource type="Script" uid="uid://b33kavqsjahjc" path="res://main/main.gd" id="1_ipbj0"]
 [ext_resource type="Shader" uid="uid://efcd8y1ki25f" path="res://components/background/checkboard_background.gdshader" id="2_bsumw"]
-[ext_resource type="Script" uid="uid://bp1kypbjxpikr" path="res://_debug/debug_controller.gd" id="2_ipbj0"]
-[ext_resource type="PackedScene" uid="uid://cg1ug3ry6a5x1" path="res://cursor/cursor.tscn" id="3_c2dye"]
+[ext_resource type="Script" uid="uid://bp1kypbjxpikr" path="res://debug/debug_controller.gd" id="2_ipbj0"]
+[ext_resource type="PackedScene" uid="uid://cg1ug3ry6a5x1" path="res://game/cursor/cursor.tscn" id="3_c2dye"]
 [ext_resource type="Script" uid="uid://brlgnkqw8xfsb" path="res://components/background/checkerboard_background.gd" id="3_fwcvl"]
 [ext_resource type="Script" uid="uid://02fcye2pf3k3" path="res://main/input_controller.gd" id="3_grrlh"]
-[ext_resource type="PackedScene" uid="uid://baj11f6v855i" path="res://ball/ball.tscn" id="4_n6juq"]
-[ext_resource type="PackedScene" uid="uid://bhkvgq3g5yshc" path="res://target/target.tscn" id="5_3wy1v"]
+[ext_resource type="PackedScene" uid="uid://baj11f6v855i" path="res://game/ball/ball.tscn" id="4_n6juq"]
+[ext_resource type="PackedScene" uid="uid://bhkvgq3g5yshc" path="res://game/target/target.tscn" id="5_3wy1v"]
 [ext_resource type="Script" uid="uid://be6knta7t0vif" path="res://main/target_spawner.gd" id="6_kfbq2"]
-[ext_resource type="Script" uid="uid://d0yihjvph111e" path="res://camera/camera_shake.gd" id="8_67ri8"]
-[ext_resource type="Script" uid="uid://cb4ft125etweq" path="res://camera/impact_camera_shake.gd" id="9_grrlh"]
+[ext_resource type="Script" uid="uid://d0yihjvph111e" path="res://main/camera/camera_shake.gd" id="8_67ri8"]
+[ext_resource type="Script" uid="uid://cb4ft125etweq" path="res://main/camera/impact_camera_shake.gd" id="9_grrlh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_na0o7"]
 shader = ExtResource("2_bsumw")
@@ -40,9 +40,9 @@ y_sort_enabled = true
 script = ExtResource("6_kfbq2")
 target_scene = ExtResource("5_3wy1v")
 
-[node name="Cursor" parent="." unique_id=413606096 instance=ExtResource("3_c2dye")]
-
 [node name="Ball" parent="." unique_id=698706806 instance=ExtResource("4_n6juq")]
+
+[node name="Cursor" parent="." unique_id=413606096 instance=ExtResource("3_c2dye")]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1383456107]
 offset = Vector2(960, 540)
