@@ -15,12 +15,8 @@ func _ready() -> void:
 func setup(model: EffectModel) -> void:
 	_clear()
 
-	var title := Label.new()
-	title.text = model.display_name
-	add_child(title)
-
 	var enabled_checkbox := CheckBox.new()
-	enabled_checkbox.text = "有効"
+	enabled_checkbox.text = model.display_name
 	enabled_checkbox.button_pressed = model.enabled
 	enabled_checkbox.toggled.connect(
 		func(enabled: bool) -> void:
@@ -65,6 +61,13 @@ func _create_number_editor(
 	spin_box.max_value = parameter.max_value
 	spin_box.step = parameter.step
 	spin_box.value = float(model.get_value(parameter.id))
+	var line_edit := spin_box.get_line_edit()
+
+	line_edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	line_edit.text_submitted.connect(
+		func(_text: String) -> void:
+			line_edit.release_focus()
+	)
 	row.add_child(spin_box)
 
 	spin_box.value_changed.connect(

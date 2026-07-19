@@ -14,6 +14,8 @@
 [ext_resource type="Script" uid="uid://chmtu4qrugmd3" path="res://visuals/screen_effects/color_quantization.gd" id="12_73k8k"]
 [ext_resource type="Shader" uid="uid://cwadrf65yyjk3" path="res://visuals/screen_effects/color_quantization.gdshader" id="13_5xyti"]
 [ext_resource type="Script" uid="uid://cykdovtivy5sr" path="res://visuals/screen_effects/ui/effect_panel.gd" id="14_n3o0a"]
+[ext_resource type="Script" uid="uid://dsj3hm8m4ccr6" path="res://visuals/screen_effects/ui/effect_ui.gd" id="14_s758e"]
+[ext_resource type="Script" uid="uid://c77cnlqgw2st4" path="res://visuals/screen_effects/ui/floating_panel.gd" id="15_4hmqs"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_na0o7"]
 shader = ExtResource("2_bsumw")
@@ -82,6 +84,7 @@ mouse_filter = 2
 
 [node name="EffectUI" type="CanvasLayer" parent="." unique_id=529615813]
 layer = 200
+script = ExtResource("14_s758e")
 
 [node name="FloatingPanel" type="PanelContainer" parent="EffectUI" unique_id=1118150779]
 custom_minimum_size = Vector2(400, 0)
@@ -89,6 +92,7 @@ offset_left = 24.0
 offset_top = 24.0
 offset_right = 424.0
 offset_bottom = 64.0
+script = ExtResource("15_4hmqs")
 
 [node name="VBox" type="VBoxContainer" parent="EffectUI/FloatingPanel" unique_id=2122444212]
 layout_mode = 2
@@ -107,9 +111,10 @@ mouse_default_cursor_shape = 13
 layout_mode = 2
 size_flags_vertical = 1
 text = "Screen Effects"
+horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CloseButton" type="Button" parent="EffectUI/FloatingPanel/VBox/Header/DragArea" unique_id=1737123267]
+[node name="CloseButton" type="Button" parent="EffectUI/FloatingPanel/VBox/Header" unique_id=1737123267]
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 size_flags_horizontal = 8
