@@ -73,21 +73,56 @@ script = ExtResource("12_73k8k")
 
 [node name="EffectRect" type="ColorRect" parent="ColorQuantizationEffect" unique_id=970782549]
 material = SubResource("ShaderMaterial_ua4af")
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 
 [node name="EffectUI" type="CanvasLayer" parent="." unique_id=529615813]
 layer = 200
 
-[node name="Panel" type="PanelContainer" parent="EffectUI" unique_id=1008869725]
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="FloatingPanel" type="PanelContainer" parent="EffectUI" unique_id=1118150779]
+custom_minimum_size = Vector2(400, 0)
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 424.0
+offset_bottom = 64.0
 
-[node name="MarginContainer" type="MarginContainer" parent="EffectUI/Panel" unique_id=934203281]
+[node name="VBox" type="VBoxContainer" parent="EffectUI/FloatingPanel" unique_id=2122444212]
 layout_mode = 2
 
-[node name="EffectPanel" type="VBoxContainer" parent="EffectUI/Panel/MarginContainer" unique_id=1531086623]
+[node name="Header" type="HBoxContainer" parent="EffectUI/FloatingPanel/VBox" unique_id=1682124448]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+
+[node name="DragArea" type="MarginContainer" parent="EffectUI/FloatingPanel/VBox/Header" unique_id=1750938536]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 0
+mouse_default_cursor_shape = 13
+
+[node name="Title" type="Label" parent="EffectUI/FloatingPanel/VBox/Header/DragArea" unique_id=1594629902]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Screen Effects"
+vertical_alignment = 1
+
+[node name="CloseButton" type="Button" parent="EffectUI/FloatingPanel/VBox/Header/DragArea" unique_id=1737123267]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+size_flags_horizontal = 8
+text = "×"
+
+[node name="Content" type="MarginContainer" parent="EffectUI/FloatingPanel/VBox" unique_id=469043818]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="EffectPanel" type="VBoxContainer" parent="EffectUI/FloatingPanel/VBox/Content" unique_id=1470538329]
 layout_mode = 2
 script = ExtResource("14_n3o0a")
-effect_path = NodePath("../../../../ColorQuantizationEffect")
+effect_path = NodePath("../../../../../ColorQuantizationEffect")
