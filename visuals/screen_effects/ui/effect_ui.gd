@@ -3,12 +3,12 @@ extends CanvasLayer
 
 signal panel_visibility_changed(is_visible: bool)
 
-@onready var floating_panel: Control = $FloatingPanel
+@onready var _floating_panel: Control = $FloatingPanel
 
 
 func _ready() -> void:
-	floating_panel.hide()
-	floating_panel.visibility_changed.connect(
+	_floating_panel.hide()
+	_floating_panel.visibility_changed.connect(
 		_on_floating_panel_visibility_changed
 	)
 	_emit_panel_visibility()
@@ -24,8 +24,12 @@ func _input(event: InputEvent) -> void:
 	elif event is InputEventKey:
 		var key_event := event as InputEventKey
 
-		if key_event.pressed and not key_event.echo and key_event.keycode == KEY_F1:
-			floating_panel.visible = not floating_panel.visible
+		if (
+			key_event.pressed
+			and not key_event.echo
+			and key_event.keycode == KEY_F1
+		):
+			_floating_panel.visible = not _floating_panel.visible
 			get_viewport().set_input_as_handled()
 
 
@@ -34,4 +38,4 @@ func _on_floating_panel_visibility_changed() -> void:
 
 
 func _emit_panel_visibility() -> void:
-	panel_visibility_changed.emit(floating_panel.visible)
+	panel_visibility_changed.emit(_floating_panel.visible)

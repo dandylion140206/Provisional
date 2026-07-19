@@ -4,7 +4,7 @@ extends VBoxContainer
 @export var effect_path: NodePath
 
 var _model: EffectModel
-var _parameter_editors: Dictionary = {}
+var _parameter_editors: Dictionary[StringName, Control] = {}
 
 
 func _ready() -> void:
@@ -14,9 +14,10 @@ func _ready() -> void:
 
 
 func setup(model: EffectModel) -> void:
-	_clear()
+	_disconnect_model()
+	_clear_editors()
+
 	_model = model
-	_parameter_editors.clear()
 
 	var enabled_checkbox := CheckBox.new()
 	enabled_checkbox.text = model.display_name
@@ -28,41 +29,36 @@ func setup(model: EffectModel) -> void:
 	add_child(enabled_checkbox)
 
 	for parameter in model.parameters:
-		_create_parameter_editor(model, parameter)
+		_create_parameter_editor(parameter)
 
-	if not model.parameter_changed.is_connected(_on_model_parameter_changed):
-		model.parameter_changed.connect(_on_model_parameter_changed)
-
+	_model.parameter_changed.connect(_on_model_parameter_changed)
 	_update_parameter_visibility()
 
 
-func _create_parameter_editor(
-	model: EffectModel,
-	parameter: EffectParameter,
-) -> void:
-	var editor: Control = null
+func _create_parameter_editor(parameter: EffectParameter) -> void:
+	var editor: Control
 
 	match parameter.kind:
 		EffectParameter.Kind.INTEGER:
-			editor = _create_number_editor(model, parameter, true)
+			editor = _create_number_editor(parameter, true)
+
 		EffectParameter.Kind.FLOAT:
-			editor = _create_number_editor(model, parameter, false)
+			editor = _create_number_editor(parameter, false)
+
 		EffectParameter.Kind.BOOLEAN:
-			editor = _create_boolean_editor(model, parameter)
+			editor = _create_boolean_editor(parameter)
+
 		EffectParameter.Kind.ENUM:
-			editor = _create_enum_editor(model, parameter)
+			editor = _create_enum_editor(parameter)
 
 	if editor == null:
-		push_warning(
-			"Unsupported effect parameter kind: %s" % parameter.kind
-		)
+		push_warning("Unsupported effect parameter kind: %s" % parameter.kind)
 		return
 
 	_parameter_editors[parameter.id] = editor
 
 
 func _create_number_editor(
-	model: EffectModel,
 	parameter: EffectParameter,
 	use_integer: bool,
 ) -> Control:
@@ -83,7 +79,7 @@ func _create_number_editor(
 	spin_box.min_value = parameter.min_value
 	spin_box.max_value = parameter.max_value
 	spin_box.step = parameter.step
-	spin_box.value = float(model.get_value(parameter.id))
+	spin_box.value = float(_model.get_value(parameter.id))
 
 	line_edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	line_edit.text_submitted.connect(
@@ -100,23 +96,13 @@ func _create_number_editor(
 	spin_box.value_changed.connect(
 		func(value: float) -> void:
 			slider.set_value_no_signal(value)
-			_set_number_value(
-				model,
-				parameter.id,
-				value,
-				use_integer,
-			)
+			_set_number_value(parameter.id, value, use_integer)
 	)
 
 	slider.value_changed.connect(
 		func(value: float) -> void:
 			spin_box.set_value_no_signal(value)
-			_set_number_value(
-				model,
-				parameter.id,
-				value,
-				use_integer,
-			)
+			_set_number_value(parameter.id, value, use_integer)
 	)
 
 	header_row.add_child(label)
@@ -130,35 +116,32 @@ func _create_number_editor(
 
 
 func _set_number_value(
-	model: EffectModel,
-	id: StringName,
+	parameter_id: StringName,
 	value: float,
 	use_integer: bool,
 ) -> void:
-	var result: Variant = int(value) if use_integer else value
-	model.set_value(id, result)
+	var model_value: Variant = value
+
+	if use_integer:
+		model_value = int(value)
+
+	_model.set_value(parameter_id, model_value)
 
 
-func _create_boolean_editor(
-	model: EffectModel,
-	parameter: EffectParameter,
-) -> Control:
+func _create_boolean_editor(parameter: EffectParameter) -> Control:
 	var checkbox := CheckBox.new()
 	checkbox.text = parameter.display_name
-	checkbox.button_pressed = bool(model.get_value(parameter.id))
+	checkbox.button_pressed = bool(_model.get_value(parameter.id))
 	checkbox.toggled.connect(
 		func(value: bool) -> void:
-			model.set_value(parameter.id, value)
+			_model.set_value(parameter.id, value)
 	)
 
 	add_child(checkbox)
 	return checkbox
 
 
-func _create_enum_editor(
-	model: EffectModel,
-	parameter: EffectParameter,
-) -> Control:
+func _create_enum_editor(parameter: EffectParameter) -> Control:
 	var row := HBoxContainer.new()
 	var label := Label.new()
 	var option_button := OptionButton.new()
@@ -173,10 +156,10 @@ func _create_enum_editor(
 	for option in parameter.options:
 		option_button.add_item(str(option))
 
-	option_button.select(int(model.get_value(parameter.id)))
+	option_button.select(int(_model.get_value(parameter.id)))
 	option_button.item_selected.connect(
 		func(index: int) -> void:
-			model.set_value(parameter.id, index)
+			_model.set_value(parameter.id, index)
 	)
 
 	row.add_child(label)
@@ -206,14 +189,23 @@ func _update_parameter_visibility() -> void:
 			editor.show()
 			continue
 
-		var condition_value: Variant = _model.get_value(
+		var condition_value:Variant = _model.get_value(
 			parameter.visibility_parameter
 		)
-		editor.visible = parameter.visibility_values.has(
-			condition_value
-		)
+		editor.visible = parameter.visibility_values.has(condition_value)
 
 
-func _clear() -> void:
+func _disconnect_model() -> void:
+	if _model == null:
+		return
+
+	if _model.parameter_changed.is_connected(_on_model_parameter_changed):
+		_model.parameter_changed.disconnect(_on_model_parameter_changed)
+
+
+func _clear_editors() -> void:
+	_parameter_editors.clear()
+
 	for child in get_children():
+		remove_child(child)
 		child.queue_free()
