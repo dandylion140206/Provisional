@@ -10,7 +10,6 @@
 [ext_resource type="AudioStream" uid="uid://db8mu621kucfp" path="res://assets/sfx/消滅/DSGNMisc_HIT-Fleeting Hit_HY_PC-002.wav" id="8_n0ue5"]
 [ext_resource type="Script" uid="uid://cyv0rwf4lf2bv" path="res://components/hit/hit_stop.gd" id="9_fash6"]
 
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_ua4af"]
 radius = 42.0
 

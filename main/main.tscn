@@ -27,9 +27,16 @@ shader_parameter/pattern_center = Vector2(960, 540)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ua4af"]
 shader = ExtResource("13_5xyti")
+shader_parameter/quantization_mode = 0
+shader_parameter/color_space = 0
 shader_parameter/color_levels = 8
+shader_parameter/red_levels = 8
+shader_parameter/green_levels = 8
+shader_parameter/blue_levels = 8
 shader_parameter/dither_enabled = true
+shader_parameter/dither_mode = 1
 shader_parameter/dither_strength = 1.0
+shader_parameter/dither_scale = 1
 
 [node name="Main" type="Node2D" unique_id=764362608]
 physics_interpolation_mode = 2

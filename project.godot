@@ -16,7 +16,7 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [audio]
 
-buses/default_bus_layout="uid://b5pkatpv2de0w"
+buses/default_bus_layout=""
 
 [display]
 
