@@ -1,14 +1,12 @@
 class_name EffectPanel
 extends VBoxContainer
 
-
 @export var effect_path: NodePath
 
 
 func _ready() -> void:
 	var effect := get_node(effect_path)
 	var model: EffectModel = effect.get_effect_model()
-
 	setup(model)
 
 
@@ -35,10 +33,8 @@ func _create_parameter_editor(
 	match parameter.kind:
 		EffectParameter.Kind.INTEGER:
 			_create_number_editor(model, parameter, true)
-
 		EffectParameter.Kind.FLOAT:
 			_create_number_editor(model, parameter, false)
-
 		EffectParameter.Kind.BOOLEAN:
 			_create_boolean_editor(model, parameter)
 
@@ -49,34 +45,32 @@ func _create_number_editor(
 	use_integer: bool,
 ) -> void:
 	var row := HBoxContainer.new()
-	add_child(row)
-
 	var label := Label.new()
+	var spin_box := SpinBox.new()
+	var line_edit := spin_box.get_line_edit()
+
 	label.text = parameter.display_name
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(label)
 
-	var spin_box := SpinBox.new()
 	spin_box.min_value = parameter.min_value
 	spin_box.max_value = parameter.max_value
 	spin_box.step = parameter.step
 	spin_box.value = float(model.get_value(parameter.id))
-	var line_edit := spin_box.get_line_edit()
 
 	line_edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	line_edit.text_submitted.connect(
 		func(_text: String) -> void:
 			line_edit.release_focus()
 	)
-	row.add_child(spin_box)
-
 	spin_box.value_changed.connect(
 		func(value: float) -> void:
-			if use_integer:
-				model.set_value(parameter.id, int(value))
-			else:
-				model.set_value(parameter.id, value)
+			var result: Variant = int(value) if use_integer else value
+			model.set_value(parameter.id, result)
 	)
+
+	row.add_child(label)
+	row.add_child(spin_box)
+	add_child(row)
 
 
 func _create_boolean_editor(
@@ -86,12 +80,10 @@ func _create_boolean_editor(
 	var checkbox := CheckBox.new()
 	checkbox.text = parameter.display_name
 	checkbox.button_pressed = bool(model.get_value(parameter.id))
-
 	checkbox.toggled.connect(
 		func(value: bool) -> void:
 			model.set_value(parameter.id, value)
 	)
-
 	add_child(checkbox)
 
 

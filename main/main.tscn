@@ -88,6 +88,7 @@ script = ExtResource("14_s758e")
 
 [node name="FloatingPanel" type="PanelContainer" parent="EffectUI" unique_id=1118150779]
 custom_minimum_size = Vector2(400, 0)
+custom_maximum_size = Vector2(-1, 900)
 offset_left = 24.0
 offset_top = 24.0
 offset_right = 424.0
@@ -120,14 +121,19 @@ layout_mode = 2
 size_flags_horizontal = 8
 text = "×"
 
-[node name="Content" type="MarginContainer" parent="EffectUI/FloatingPanel/VBox" unique_id=469043818]
+[node name="ScrollContainer" type="ScrollContainer" parent="EffectUI/FloatingPanel/VBox" unique_id=1621866759]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Content" type="MarginContainer" parent="EffectUI/FloatingPanel/VBox/ScrollContainer" unique_id=469043818]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="EffectPanel" type="VBoxContainer" parent="EffectUI/FloatingPanel/VBox/Content" unique_id=1470538329]
+[node name="EffectPanel" type="VBoxContainer" parent="EffectUI/FloatingPanel/VBox/ScrollContainer/Content" unique_id=1470538329]
 layout_mode = 2
 script = ExtResource("14_n3o0a")
-effect_path = NodePath("../../../../../ColorQuantizationEffect")
+effect_path = NodePath("../../../../../../ColorQuantizationEffect")

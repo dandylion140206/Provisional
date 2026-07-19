@@ -1,7 +1,6 @@
 class_name ColorQuantizationEffect
 extends CanvasLayer
 
-
 @onready var effect_rect: ColorRect = $EffectRect
 
 var model := EffectModel.new("色量子化")
