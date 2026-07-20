@@ -28,12 +28,20 @@ func setup(state: ScreenEffectState) -> void:
 
 
 func _create_enabled_editor() -> void:
+	var header := HBoxContainer.new()
+
 	_enabled_checkbox = CheckBox.new()
 	_enabled_checkbox.text = _state.display_name
+	_enabled_checkbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_enabled_checkbox.set_pressed_no_signal(_state.enabled)
 	_enabled_checkbox.toggled.connect(_on_enabled_checkbox_toggled)
 
-	add_child(_enabled_checkbox)
+	var reset_button := _create_reset_button("Reset effect")
+	reset_button.pressed.connect(_on_effect_reset_pressed)
+
+	header.add_child(_enabled_checkbox)
+	header.add_child(reset_button)
+	add_child(header)
 
 
 func _create_parameter_editor(parameter: ScreenEffectParameterDefinition) -> void:
@@ -63,6 +71,7 @@ func _create_number_editor(
 	var label := Label.new()
 	var spin_box := SpinBox.new()
 	var slider := HSlider.new()
+	var reset_button := _create_reset_button("Reset %s" % parameter.display_name)
 	var value := float(_state.get_value(parameter.id))
 
 	label.text = parameter.display_name
@@ -89,6 +98,9 @@ func _create_number_editor(
 
 	header.add_child(label)
 	header.add_child(spin_box)
+	header.add_child(reset_button)
+
+	reset_button.pressed.connect(_on_parameter_reset_pressed.bind(parameter.id))
 
 	row.add_child(header)
 	row.add_child(slider)
@@ -100,15 +112,21 @@ func _create_number_editor(
 
 
 func _create_boolean_editor(parameter: ScreenEffectParameterDefinition) -> void:
+	var row := HBoxContainer.new()
 	var checkbox := CheckBox.new()
+	var reset_button := _create_reset_button("Reset %s" % parameter.display_name)
 
 	checkbox.text = parameter.display_name
+	checkbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	checkbox.set_pressed_no_signal(bool(_state.get_value(parameter.id)))
 	checkbox.toggled.connect(_on_boolean_toggled.bind(parameter.id))
+	reset_button.pressed.connect(_on_parameter_reset_pressed.bind(parameter.id))
 
-	add_child(checkbox)
+	row.add_child(checkbox)
+	row.add_child(reset_button)
+	add_child(row)
 
-	_parameter_rows[parameter.id] = checkbox
+	_parameter_rows[parameter.id] = row
 	_parameter_editors[parameter.id] = checkbox
 
 
@@ -116,6 +134,7 @@ func _create_enum_editor(parameter: ScreenEffectParameterDefinition) -> void:
 	var row := HBoxContainer.new()
 	var label := Label.new()
 	var option_button := OptionButton.new()
+	var reset_button := _create_reset_button("Reset %s" % parameter.display_name)
 
 	label.text = parameter.display_name
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -128,7 +147,10 @@ func _create_enum_editor(parameter: ScreenEffectParameterDefinition) -> void:
 
 	row.add_child(label)
 	row.add_child(option_button)
+	row.add_child(reset_button)
 	add_child(row)
+
+	reset_button.pressed.connect(_on_parameter_reset_pressed.bind(parameter.id))
 
 	_parameter_rows[parameter.id] = row
 	_parameter_editors[parameter.id] = option_button
@@ -137,6 +159,16 @@ func _create_enum_editor(parameter: ScreenEffectParameterDefinition) -> void:
 func _on_enabled_checkbox_toggled(enabled: bool) -> void:
 	assert(_state != null, "ScreenEffectState must not be null")
 	_state.enabled = enabled
+
+
+func _on_effect_reset_pressed() -> void:
+	assert(_state != null, "ScreenEffectState must not be null")
+	_state.reset()
+
+
+func _on_parameter_reset_pressed(parameter_id: StringName) -> void:
+	assert(_state != null, "ScreenEffectState must not be null")
+	_state.reset_parameter(parameter_id)
 
 
 func _on_number_value_changed(value: float, parameter_id: StringName) -> void:
@@ -250,6 +282,16 @@ func _set_row_active_appearance(row: Control, is_active: bool) -> void:
 	var color := row.modulate
 	color.a = 1.0 if is_active else 0.5
 	row.modulate = color
+
+
+func _create_reset_button(tooltip: String) -> Button:
+	var reset_button := Button.new()
+
+	reset_button.custom_minimum_size = Vector2(32.0, 0.0)
+	reset_button.tooltip_text = tooltip
+	reset_button.text = "↺"
+
+	return reset_button
 
 
 func _disconnect_state() -> void:

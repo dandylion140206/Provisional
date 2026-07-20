@@ -1,6 +1,7 @@
 class_name ScreenEffectDefinition
 extends Resource
 
+@export var id: StringName
 @export var display_name: String
 @export var shader: Shader
 @export var enabled_by_default := true
@@ -8,6 +9,7 @@ extends Resource
 
 
 func validate(parameter_ids: Dictionary[StringName, bool]) -> void:
+	assert(not id.is_empty(), "Screen effect id must not be empty")
 	assert(not display_name.is_empty(), "Screen effect display name must not be empty")
 	assert(shader != null, "Screen effect shader must not be null: %s" % display_name)
 

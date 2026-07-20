@@ -4,6 +4,7 @@ extends RefCounted
 signal parameter_changed(id: StringName, value: Variant)
 signal enabled_changed(enabled: bool)
 
+var id: StringName
 var display_name: String
 var parameters: Array[ScreenEffectParameterDefinition] = []
 
@@ -18,14 +19,17 @@ var enabled := true:
 var _activation_rules: Array[ScreenEffectParameterActivationRule] = []
 var _parameters_by_id: Dictionary[StringName, ScreenEffectParameterDefinition] = {}
 var _values: Dictionary[StringName, Variant] = {}
+var _default_enabled := true
 
 
 func _init(definition: ScreenEffectDefinition) -> void:
 	assert(definition != null, "ScreenEffectDefinition must not be null")
 	assert(definition.shader != null, "Screen effect shader must not be null")
 
+	id = definition.id
 	display_name = definition.display_name
-	enabled = definition.enabled_by_default
+	_default_enabled = definition.enabled_by_default
+	enabled = _default_enabled
 	parameters = ScreenEffectParameterReader.read_all(definition.shader)
 	_activation_rules = definition.activation_rules.duplicate()
 
@@ -64,6 +68,48 @@ func set_value(parameter_id: StringName, value: Variant) -> void:
 
 	_values[parameter_id] = normalized_value
 	parameter_changed.emit(parameter_id, normalized_value)
+
+
+func reset() -> void:
+	enabled = _default_enabled
+
+	for parameter in parameters:
+		reset_parameter(parameter.id)
+
+
+func reset_parameter(parameter_id: StringName) -> void:
+	var parameter := get_parameter(parameter_id)
+	set_value(parameter_id, parameter.default_value)
+
+
+func create_settings() -> Dictionary:
+	var values := {}
+
+	for parameter in parameters:
+		values[String(parameter.id)] = _values[parameter.id]
+
+	return {
+		"enabled": enabled,
+		"values": values,
+	}
+
+
+func apply_settings(settings: Dictionary) -> void:
+	if settings.has("enabled"):
+		enabled = bool(settings["enabled"])
+
+	var values_value: Variant = settings.get("values", {})
+	if not values_value is Dictionary:
+		push_warning("Invalid screen effect settings: %s" % id)
+		return
+
+	var values: Dictionary = values_value
+
+	for parameter in parameters:
+		var parameter_id := String(parameter.id)
+
+		if values.has(parameter_id):
+			set_value(parameter.id, values[parameter_id])
 
 
 func is_parameter_active(parameter_id: StringName) -> bool:
