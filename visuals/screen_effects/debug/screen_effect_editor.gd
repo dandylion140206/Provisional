@@ -6,6 +6,7 @@ var _enabled_checkbox: CheckBox
 var _parameter_rows: Dictionary[StringName, Control] = {}
 var _parameter_editors: Dictionary[StringName, Control] = {}
 var _parameter_sliders: Dictionary[StringName, Slider] = {}
+var _parameter_reset_buttons: Dictionary[StringName, Button] = {}
 
 
 func setup(state: ScreenEffectState) -> void:
@@ -92,6 +93,7 @@ func _create_number_editor(
 	slider.allow_greater = false
 	slider.allow_lesser = false
 	slider.rounded = use_integer
+	slider.scrollable = false
 	slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	slider.set_value_no_signal(value)
 	slider.value_changed.connect(_on_number_value_changed.bind(parameter.id))
@@ -109,6 +111,7 @@ func _create_number_editor(
 	_parameter_rows[parameter.id] = row
 	_parameter_editors[parameter.id] = spin_box
 	_parameter_sliders[parameter.id] = slider
+	_parameter_reset_buttons[parameter.id] = reset_button
 
 
 func _create_boolean_editor(parameter: ScreenEffectParameterDefinition) -> void:
@@ -128,6 +131,7 @@ func _create_boolean_editor(parameter: ScreenEffectParameterDefinition) -> void:
 
 	_parameter_rows[parameter.id] = row
 	_parameter_editors[parameter.id] = checkbox
+	_parameter_reset_buttons[parameter.id] = reset_button
 
 
 func _create_enum_editor(parameter: ScreenEffectParameterDefinition) -> void:
@@ -154,6 +158,7 @@ func _create_enum_editor(parameter: ScreenEffectParameterDefinition) -> void:
 
 	_parameter_rows[parameter.id] = row
 	_parameter_editors[parameter.id] = option_button
+	_parameter_reset_buttons[parameter.id] = reset_button
 
 
 func _on_enabled_checkbox_toggled(enabled: bool) -> void:
@@ -199,6 +204,7 @@ func _on_state_enabled_changed(enabled: bool) -> void:
 		return
 
 	_enabled_checkbox.set_pressed_no_signal(enabled)
+	_update_parameter_activation_states()
 
 
 func _on_state_parameter_changed(id: StringName, value: Variant) -> void:
@@ -254,11 +260,13 @@ func _update_parameter_activation_states() -> void:
 		assert(_parameter_rows.has(parameter.id), "Parameter row not found: %s" % parameter.id)
 		assert(_parameter_editors.has(parameter.id), "Parameter editor not found: %s" % parameter.id)
 
-		var is_active := _state.is_parameter_active(parameter.id)
+		var is_active := _state.enabled and _state.is_parameter_active(parameter.id)
 		var row := _parameter_rows[parameter.id]
 		var editor := _parameter_editors[parameter.id]
+		var reset_button := _parameter_reset_buttons[parameter.id]
 
 		_set_editor_active(editor, is_active)
+		reset_button.disabled = not is_active
 
 		if _parameter_sliders.has(parameter.id):
 			_parameter_sliders[parameter.id].editable = is_active
@@ -312,6 +320,7 @@ func _clear_editors() -> void:
 	_parameter_rows.clear()
 	_parameter_editors.clear()
 	_parameter_sliders.clear()
+	_parameter_reset_buttons.clear()
 
 	for child in get_children():
 		remove_child(child)

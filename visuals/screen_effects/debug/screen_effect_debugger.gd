@@ -168,7 +168,11 @@ func _emit_panel_visibility() -> void:
 func _create_effect_editors(states: Array[ScreenEffectState]) -> void:
 	_clear_effect_editors()
 
-	for state in states:
+	for index in states.size():
+		if index > 0:
+			_effect_list.add_child(HSeparator.new())
+
+		var state := states[index]
 		assert(state != null, "ScreenEffectState must not be null")
 
 		var editor := ScreenEffectEditor.new()

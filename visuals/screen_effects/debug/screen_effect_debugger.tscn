@@ -8,10 +8,10 @@ layer = 200
 script = ExtResource("1_debugger")
 
 [node name="ScreenEffectDebugWindow" type="PanelContainer" parent="." unique_id=1220811096]
-offset_left = 24.0
-offset_top = 24.0
-offset_right = 524.0
-offset_bottom = 924.0
+offset_left = 60.0
+offset_top = 60.0
+offset_right = 560.0
+offset_bottom = 1020.0
 script = ExtResource("2_window")
 
 [node name="VBox" type="VBoxContainer" parent="ScreenEffectDebugWindow" unique_id=2106037951]
@@ -117,6 +117,7 @@ theme_override_constants/margin_bottom = 12
 [node name="EffectList" type="VBoxContainer" parent="ScreenEffectDebugWindow/VBox/ScrollContainer/Content" unique_id=1085027782]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_constants/separation = 24
 
 [node name="ResetAllDialog" type="ConfirmationDialog" parent="." unique_id=1048836396]
 unique_name_in_owner = true
