@@ -1,15 +1,15 @@
 class_name ScreenEffectPanel
 extends VBoxContainer
 
-var _model: EffectModel
+var _model: ScreenEffectModel
 var _enabled_checkbox: CheckBox
 var _parameter_rows: Dictionary[StringName, Control] = {}
 var _parameter_editors: Dictionary[StringName, Control] = {}
 var _parameter_sliders: Dictionary[StringName, Slider] = {}
 
 
-func setup(model: EffectModel) -> void:
-	assert(model != null, "EffectModel must not be null")
+func setup(model: ScreenEffectModel) -> void:
+	assert(model != null, "ScreenEffectModel must not be null")
 
 	_disconnect_model()
 	_clear_editors()
@@ -24,7 +24,7 @@ func setup(model: EffectModel) -> void:
 	_model.parameter_changed.connect(_on_model_parameter_changed)
 	_model.enabled_changed.connect(_on_model_enabled_changed)
 
-	_update_parameter_enabled_states()
+	_update_parameter_editability_states()
 
 
 func _create_enabled_editor() -> void:
@@ -36,25 +36,28 @@ func _create_enabled_editor() -> void:
 	add_child(_enabled_checkbox)
 
 
-func _create_parameter_editor(parameter: EffectParameterDefinition) -> void:
+func _create_parameter_editor(parameter: ScreenEffectParameterDefinition) -> void:
 	match parameter.kind:
-		EffectParameterDefinition.Kind.INTEGER:
+		ScreenEffectParameterDefinition.Kind.INTEGER:
 			_create_number_editor(parameter, true)
 
-		EffectParameterDefinition.Kind.FLOAT:
+		ScreenEffectParameterDefinition.Kind.FLOAT:
 			_create_number_editor(parameter, false)
 
-		EffectParameterDefinition.Kind.BOOLEAN:
+		ScreenEffectParameterDefinition.Kind.BOOLEAN:
 			_create_boolean_editor(parameter)
 
-		EffectParameterDefinition.Kind.ENUM:
+		ScreenEffectParameterDefinition.Kind.ENUM:
 			_create_enum_editor(parameter)
 
 		_:
 			assert(false, "Unsupported effect parameter kind: %s" % parameter.kind)
 
 
-func _create_number_editor(parameter: EffectParameterDefinition, use_integer: bool) -> void:
+func _create_number_editor(
+	parameter: ScreenEffectParameterDefinition,
+	use_integer: bool,
+) -> void:
 	var row := VBoxContainer.new()
 	var header := HBoxContainer.new()
 	var label := Label.new()
@@ -96,7 +99,7 @@ func _create_number_editor(parameter: EffectParameterDefinition, use_integer: bo
 	_parameter_sliders[parameter.id] = slider
 
 
-func _create_boolean_editor(parameter: EffectParameterDefinition) -> void:
+func _create_boolean_editor(parameter: ScreenEffectParameterDefinition) -> void:
 	var checkbox := CheckBox.new()
 
 	checkbox.text = parameter.display_name
@@ -109,7 +112,7 @@ func _create_boolean_editor(parameter: EffectParameterDefinition) -> void:
 	_parameter_editors[parameter.id] = checkbox
 
 
-func _create_enum_editor(parameter: EffectParameterDefinition) -> void:
+func _create_enum_editor(parameter: ScreenEffectParameterDefinition) -> void:
 	var row := HBoxContainer.new()
 	var label := Label.new()
 	var option_button := OptionButton.new()
@@ -132,22 +135,22 @@ func _create_enum_editor(parameter: EffectParameterDefinition) -> void:
 
 
 func _on_enabled_checkbox_toggled(enabled: bool) -> void:
-	assert(_model != null, "EffectModel must not be null")
+	assert(_model != null, "ScreenEffectModel must not be null")
 	_model.enabled = enabled
 
 
 func _on_number_value_changed(value: float, parameter_id: StringName) -> void:
-	assert(_model != null, "EffectModel must not be null")
+	assert(_model != null, "ScreenEffectModel must not be null")
 	_model.set_value(parameter_id, value)
 
 
 func _on_boolean_toggled(value: bool, parameter_id: StringName) -> void:
-	assert(_model != null, "EffectModel must not be null")
+	assert(_model != null, "ScreenEffectModel must not be null")
 	_model.set_value(parameter_id, value)
 
 
 func _on_enum_item_selected(index: int, parameter_id: StringName) -> void:
-	assert(_model != null, "EffectModel must not be null")
+	assert(_model != null, "ScreenEffectModel must not be null")
 
 	var parameter := _model.get_parameter(parameter_id)
 
@@ -168,7 +171,7 @@ func _on_model_enabled_changed(enabled: bool) -> void:
 
 func _on_model_parameter_changed(id: StringName, value: Variant) -> void:
 	_update_editor_value(id, value)
-	_update_parameter_enabled_states()
+	_update_parameter_editability_states()
 
 
 func _update_editor_value(id: StringName, value: Variant) -> void:
@@ -178,18 +181,18 @@ func _update_editor_value(id: StringName, value: Variant) -> void:
 	var editor := _parameter_editors[id]
 
 	match parameter.kind:
-		EffectParameterDefinition.Kind.INTEGER, EffectParameterDefinition.Kind.FLOAT:
+		ScreenEffectParameterDefinition.Kind.INTEGER, ScreenEffectParameterDefinition.Kind.FLOAT:
 			assert(editor is SpinBox, "Numeric editor must be SpinBox: %s" % id)
 			assert(_parameter_sliders.has(id), "Parameter slider not found: %s" % id)
 
 			(editor as SpinBox).set_value_no_signal(float(value))
 			_parameter_sliders[id].set_value_no_signal(float(value))
 
-		EffectParameterDefinition.Kind.BOOLEAN:
+		ScreenEffectParameterDefinition.Kind.BOOLEAN:
 			assert(editor is CheckBox, "Boolean editor must be CheckBox: %s" % id)
 			(editor as CheckBox).set_pressed_no_signal(bool(value))
 
-		EffectParameterDefinition.Kind.ENUM:
+		ScreenEffectParameterDefinition.Kind.ENUM:
 			assert(editor is OptionButton, "Enum editor must be OptionButton: %s" % id)
 			_select_enum_value(editor as OptionButton, parameter, int(value))
 
@@ -199,7 +202,7 @@ func _update_editor_value(id: StringName, value: Variant) -> void:
 
 func _select_enum_value(
 	option_button: OptionButton,
-	parameter: EffectParameterDefinition,
+	parameter: ScreenEffectParameterDefinition,
 	value: int,
 ) -> void:
 	var option_index := parameter.get_option_index(value)
@@ -212,8 +215,8 @@ func _select_enum_value(
 	option_button.select(option_index)
 
 
-func _update_parameter_enabled_states() -> void:
-	assert(_model != null, "EffectModel must not be null")
+func _update_parameter_editability_states() -> void:
+	assert(_model != null, "ScreenEffectModel must not be null")
 
 	for parameter in _model.parameters:
 		assert(_parameter_rows.has(parameter.id), "Parameter row not found: %s" % parameter.id)
@@ -223,29 +226,29 @@ func _update_parameter_enabled_states() -> void:
 		var row := _parameter_rows[parameter.id]
 		var editor := _parameter_editors[parameter.id]
 
-		_set_editor_enabled(editor, editable)
+		_set_editor_editable(editor, editable)
 
 		if _parameter_sliders.has(parameter.id):
 			_parameter_sliders[parameter.id].editable = editable
 
-		_set_row_enabled_appearance(row, editable)
+		_set_row_editable_appearance(row, editable)
 
 
-func _set_editor_enabled(editor: Control, enabled: bool) -> void:
+func _set_editor_editable(editor: Control, editable: bool) -> void:
 	if editor is BaseButton:
-		(editor as BaseButton).disabled = not enabled
+		(editor as BaseButton).disabled = not editable
 		return
 
 	if editor is SpinBox:
-		(editor as SpinBox).editable = enabled
+		(editor as SpinBox).editable = editable
 		return
 
 	assert(false, "Unsupported parameter editor: %s" % editor.get_class())
 
 
-func _set_row_enabled_appearance(row: Control, enabled: bool) -> void:
+func _set_row_editable_appearance(row: Control, editable: bool) -> void:
 	var color := row.modulate
-	color.a = 1.0 if enabled else 0.5
+	color.a = 1.0 if editable else 0.5
 	row.modulate = color
 
 

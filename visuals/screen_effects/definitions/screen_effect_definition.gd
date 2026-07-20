@@ -12,5 +12,5 @@ func validate(parameter_ids: Dictionary[StringName, bool]) -> void:
 	assert(shader != null, "Screen effect shader must not be null: %s" % display_name)
 
 	for rule in editability_rules:
-		assert(rule != null, "Enable rule must not be null: %s" % display_name)
+		assert(rule != null, "Editability rule must not be null: %s" % display_name)
 		rule.validate(parameter_ids)

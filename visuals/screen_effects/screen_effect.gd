@@ -3,7 +3,7 @@ extends CanvasLayer
 
 @export var definition: ScreenEffectDefinition
 
-var model: EffectModel
+var model: ScreenEffectModel
 
 @onready var _effect_rect: ColorRect = $EffectRect
 
@@ -19,7 +19,7 @@ func _ready() -> void:
 	_material.shader = definition.shader
 	_effect_rect.material = _material
 
-	model = EffectModel.new(definition)
+	model = ScreenEffectModel.new(definition)
 	model.parameter_changed.connect(_on_parameter_changed)
 	model.enabled_changed.connect(_on_enabled_changed)
 

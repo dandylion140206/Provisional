@@ -28,13 +28,13 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 
-func setup(models: Array[EffectModel]) -> void:
+func setup(models: Array[ScreenEffectModel]) -> void:
 	assert(_effect_list != null, "EffectList must not be null")
 
 	_clear_effect_panels()
 
 	for model in models:
-		assert(model != null, "EffectModel must not be null")
+		assert(model != null, "ScreenEffectModel must not be null")
 
 		var panel := ScreenEffectPanel.new()
 		_effect_list.add_child(panel)

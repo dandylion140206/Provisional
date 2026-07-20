@@ -1,12 +1,12 @@
-class_name ShaderParameterDefinitionFactory
+class_name ScreenEffectParameterDefinitionFactory
 extends RefCounted
 
 
-static func create_all(shader: Shader) -> Array[EffectParameterDefinition]:
+static func create_all(shader: Shader) -> Array[ScreenEffectParameterDefinition]:
 	assert(shader != null, "Shader must not be null")
 
 	var shader_rid := shader.get_rid()
-	var parameters: Array[EffectParameterDefinition] = []
+	var parameters: Array[ScreenEffectParameterDefinition] = []
 
 	for uniform_data: Dictionary in shader.get_shader_uniform_list():
 		var parameter := _create_parameter(uniform_data, shader_rid)
@@ -20,7 +20,7 @@ static func create_all(shader: Shader) -> Array[EffectParameterDefinition]:
 static func _create_parameter(
 	uniform_data: Dictionary,
 	shader_rid: RID,
-) -> EffectParameterDefinition:
+) -> ScreenEffectParameterDefinition:
 	if not uniform_data.has("name") or not uniform_data.has("type"):
 		return null
 
@@ -29,24 +29,24 @@ static func _create_parameter(
 	var hint := int(uniform_data.get("hint", PROPERTY_HINT_NONE))
 	var hint_string := String(uniform_data.get("hint_string", ""))
 
-	var parameter := EffectParameterDefinition.new()
+	var parameter := ScreenEffectParameterDefinition.new()
 	parameter.id = parameter_id
 	parameter.display_name = String(parameter_id).capitalize()
 
 	match uniform_type:
 		TYPE_BOOL:
-			parameter.kind = EffectParameterDefinition.Kind.BOOLEAN
+			parameter.kind = ScreenEffectParameterDefinition.Kind.BOOLEAN
 
 		TYPE_INT:
 			if hint == PROPERTY_HINT_ENUM:
-				parameter.kind = EffectParameterDefinition.Kind.ENUM
+				parameter.kind = ScreenEffectParameterDefinition.Kind.ENUM
 				_apply_enum_hint(parameter, hint_string)
 			else:
-				parameter.kind = EffectParameterDefinition.Kind.INTEGER
+				parameter.kind = ScreenEffectParameterDefinition.Kind.INTEGER
 				_apply_range_hint(parameter, hint, hint_string)
 
 		TYPE_FLOAT:
-			parameter.kind = EffectParameterDefinition.Kind.FLOAT
+			parameter.kind = ScreenEffectParameterDefinition.Kind.FLOAT
 			_apply_range_hint(parameter, hint, hint_string)
 
 		TYPE_OBJECT:
@@ -61,7 +61,7 @@ static func _create_parameter(
 
 	parameter.default_value = parameter.normalize_value(parameter.default_value)
 
-	if parameter.kind == EffectParameterDefinition.Kind.ENUM:
+	if parameter.kind == ScreenEffectParameterDefinition.Kind.ENUM:
 		assert(
 			parameter.option_values.has(int(parameter.default_value)),
 			"Enum default value is not included in options: %s" % parameter.id,
@@ -71,12 +71,11 @@ static func _create_parameter(
 
 
 static func _apply_range_hint(
-	parameter: EffectParameterDefinition,
+	parameter: ScreenEffectParameterDefinition,
 	hint: int,
 	hint_string: String,
 ) -> void:
-	assert(
-		hint == PROPERTY_HINT_RANGE, "Numeric shader parameter requires hint_range: %s" % parameter.id)
+	assert(hint == PROPERTY_HINT_RANGE, "Numeric shader parameter requires hint_range: %s" % parameter.id)
 
 	var range_parts := hint_string.split(",")
 	assert(range_parts.size() >= 2, "Invalid hint_range: %s" % parameter.id)
@@ -86,7 +85,7 @@ static func _apply_range_hint(
 
 	if range_parts.size() >= 3:
 		parameter.step = range_parts[2].to_float()
-	elif parameter.kind == EffectParameterDefinition.Kind.INTEGER:
+	elif parameter.kind == ScreenEffectParameterDefinition.Kind.INTEGER:
 		parameter.step = 1.0
 	else:
 		parameter.step = 0.01
@@ -95,7 +94,10 @@ static func _apply_range_hint(
 	assert(parameter.step > 0.0, "Parameter step must be greater than zero: %s" % parameter.id)
 
 
-static func _apply_enum_hint(parameter: EffectParameterDefinition, hint_string: String) -> void:
+static func _apply_enum_hint(
+	parameter: ScreenEffectParameterDefinition,
+	hint_string: String,
+) -> void:
 	var option_entries := hint_string.split(",")
 	assert(not option_entries.is_empty(), "Enum options must not be empty: %s" % parameter.id)
 

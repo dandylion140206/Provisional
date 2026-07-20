@@ -26,7 +26,7 @@ func _init(definition: ScreenEffectDefinition) -> void:
 
 	display_name = definition.display_name
 	enabled = definition.enabled_by_default
-	parameters = ShaderParameterDefinitionFactory.create_all(definition.shader)
+	parameters = ScreenEffectParameterDefinitionFactory.create_all(definition.shader)
 	_editability_rules = definition.editability_rules.duplicate()
 
 	var parameter_ids: Dictionary[StringName, bool] = {}
@@ -75,7 +75,7 @@ func is_parameter_editable(parameter_id: StringName) -> bool:
 
 		var condition_value: Variant = get_value(rule.condition_parameter)
 
-		if not rule.is_enabled(condition_value):
+		if not rule.is_editable(condition_value):
 			return false
 
 	return true
