@@ -1,4 +1,4 @@
-class_name ScreenEffects
+class_name ScreenEffectStack
 extends Node
 
 @export var base_layer := 100

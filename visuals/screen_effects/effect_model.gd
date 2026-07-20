@@ -15,7 +15,7 @@ var enabled := true:
 		enabled = value
 		enabled_changed.emit(enabled)
 
-var _enable_rules: Array[EffectParameterEnableRule] = []
+var _editability_rules: Array[ScreenEffectParameterEditabilityRule] = []
 var _parameters_by_id: Dictionary[StringName, EffectParameterDefinition] = {}
 var _values: Dictionary[StringName, Variant] = {}
 
@@ -27,7 +27,7 @@ func _init(definition: ScreenEffectDefinition) -> void:
 	display_name = definition.display_name
 	enabled = definition.enabled_by_default
 	parameters = ShaderParameterDefinitionFactory.create_all(definition.shader)
-	_enable_rules = definition.enable_rules.duplicate()
+	_editability_rules = definition.editability_rules.duplicate()
 
 	var parameter_ids: Dictionary[StringName, bool] = {}
 
@@ -66,10 +66,10 @@ func set_value(parameter_id: StringName, value: Variant) -> void:
 	parameter_changed.emit(parameter_id, normalized_value)
 
 
-func is_parameter_enabled(parameter_id: StringName) -> bool:
+func is_parameter_editable(parameter_id: StringName) -> bool:
 	assert(has_parameter(parameter_id), "Unknown effect parameter: %s" % parameter_id)
 
-	for rule in _enable_rules:
+	for rule in _editability_rules:
 		if not rule.target_parameters.has(parameter_id):
 			continue
 

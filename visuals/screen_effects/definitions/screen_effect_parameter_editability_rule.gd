@@ -1,4 +1,4 @@
-class_name EffectParameterEnableRule
+class_name ScreenEffectParameterEditabilityRule
 extends Resource
 
 @export var condition_parameter: StringName

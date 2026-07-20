@@ -1,10 +1,11 @@
-class_name EffectPanel
+class_name ScreenEffectPanel
 extends VBoxContainer
 
 var _model: EffectModel
 var _enabled_checkbox: CheckBox
 var _parameter_rows: Dictionary[StringName, Control] = {}
 var _parameter_editors: Dictionary[StringName, Control] = {}
+var _parameter_sliders: Dictionary[StringName, Slider] = {}
 
 
 func setup(model: EffectModel) -> void:
@@ -54,9 +55,12 @@ func _create_parameter_editor(parameter: EffectParameterDefinition) -> void:
 
 
 func _create_number_editor(parameter: EffectParameterDefinition, use_integer: bool) -> void:
-	var row := HBoxContainer.new()
+	var row := VBoxContainer.new()
+	var header := HBoxContainer.new()
 	var label := Label.new()
 	var spin_box := SpinBox.new()
+	var slider := HSlider.new()
+	var value := float(_model.get_value(parameter.id))
 
 	label.text = parameter.display_name
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -67,15 +71,29 @@ func _create_number_editor(parameter: EffectParameterDefinition, use_integer: bo
 	spin_box.allow_greater = false
 	spin_box.allow_lesser = false
 	spin_box.rounded = use_integer
-	spin_box.set_value_no_signal(float(_model.get_value(parameter.id)))
+	spin_box.set_value_no_signal(value)
 	spin_box.value_changed.connect(_on_number_value_changed.bind(parameter.id))
 
-	row.add_child(label)
-	row.add_child(spin_box)
+	slider.min_value = parameter.min_value
+	slider.max_value = parameter.max_value
+	slider.step = parameter.step
+	slider.allow_greater = false
+	slider.allow_lesser = false
+	slider.rounded = use_integer
+	slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	slider.set_value_no_signal(value)
+	slider.value_changed.connect(_on_number_value_changed.bind(parameter.id))
+
+	header.add_child(label)
+	header.add_child(spin_box)
+
+	row.add_child(header)
+	row.add_child(slider)
 	add_child(row)
 
 	_parameter_rows[parameter.id] = row
 	_parameter_editors[parameter.id] = spin_box
+	_parameter_sliders[parameter.id] = slider
 
 
 func _create_boolean_editor(parameter: EffectParameterDefinition) -> void:
@@ -162,7 +180,10 @@ func _update_editor_value(id: StringName, value: Variant) -> void:
 	match parameter.kind:
 		EffectParameterDefinition.Kind.INTEGER, EffectParameterDefinition.Kind.FLOAT:
 			assert(editor is SpinBox, "Numeric editor must be SpinBox: %s" % id)
+			assert(_parameter_sliders.has(id), "Parameter slider not found: %s" % id)
+
 			(editor as SpinBox).set_value_no_signal(float(value))
+			_parameter_sliders[id].set_value_no_signal(float(value))
 
 		EffectParameterDefinition.Kind.BOOLEAN:
 			assert(editor is CheckBox, "Boolean editor must be CheckBox: %s" % id)
@@ -203,6 +224,10 @@ func _update_parameter_enabled_states() -> void:
 		var editor := _parameter_editors[parameter.id]
 
 		_set_editor_enabled(editor, enabled)
+
+		if _parameter_sliders.has(parameter.id):
+			_parameter_sliders[parameter.id].editable = enabled
+
 		_set_row_enabled_appearance(row, enabled)
 
 
@@ -241,6 +266,7 @@ func _clear_editors() -> void:
 	_enabled_checkbox = null
 	_parameter_rows.clear()
 	_parameter_editors.clear()
+	_parameter_sliders.clear()
 
 	for child in get_children():
 		remove_child(child)

@@ -1,7 +1,7 @@
 class_name ScreenEffectDebugTools
 extends Node
 
-@export var screen_effects: ScreenEffects
+@export var screen_effect_stack: ScreenEffectStack
 
 @onready var _debug_ui: ScreenEffectDebugUI = $ScreenEffectDebugUI
 
@@ -11,7 +11,7 @@ func _ready() -> void:
 		queue_free()
 		return
 
-	assert(screen_effects != null, "ScreenEffects must not be null")
+	assert(screen_effect_stack != null, "ScreenEffects must not be null")
 	assert(_debug_ui != null, "ScreenEffectDebugUI must not be null")
 
-	_debug_ui.setup(screen_effects.get_models())
+	_debug_ui.setup(screen_effect_stack.get_models())

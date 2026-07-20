@@ -36,7 +36,7 @@ func setup(models: Array[EffectModel]) -> void:
 	for model in models:
 		assert(model != null, "EffectModel must not be null")
 
-		var panel := EffectPanel.new()
+		var panel := ScreenEffectPanel.new()
 		_effect_list.add_child(panel)
 		panel.setup(model)
 
