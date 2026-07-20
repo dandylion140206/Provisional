@@ -1,4 +1,4 @@
-class_name ScreenEffectDebugTools
+class_name ScreenEffectDebugController
 extends Node
 
 @export var screen_effect_stack: ScreenEffectStack

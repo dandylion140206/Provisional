@@ -15,8 +15,8 @@ func _ready() -> void:
 		effect.layer = base_layer + index
 
 
-func get_models() -> Array[EffectModel]:
-	var models: Array[EffectModel] = []
+func get_models() -> Array[ScreenEffectModel]:
+	var models: Array[ScreenEffectModel] = []
 
 	for effect in effects:
 		assert(effect != null, "Screen effect must not be null")

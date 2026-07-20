@@ -1,11 +1,11 @@
-class_name EffectModel
+class_name ScreenEffectModel
 extends RefCounted
 
 signal parameter_changed(id: StringName, value: Variant)
 signal enabled_changed(enabled: bool)
 
 var display_name: String
-var parameters: Array[EffectParameterDefinition] = []
+var parameters: Array[ScreenEffectParameterDefinition] = []
 
 var enabled := true:
 	set(value):
@@ -16,7 +16,7 @@ var enabled := true:
 		enabled_changed.emit(enabled)
 
 var _editability_rules: Array[ScreenEffectParameterEditabilityRule] = []
-var _parameters_by_id: Dictionary[StringName, EffectParameterDefinition] = {}
+var _parameters_by_id: Dictionary[StringName, ScreenEffectParameterDefinition] = {}
 var _values: Dictionary[StringName, Variant] = {}
 
 
@@ -45,7 +45,7 @@ func has_parameter(parameter_id: StringName) -> bool:
 	return _parameters_by_id.has(parameter_id)
 
 
-func get_parameter(parameter_id: StringName) -> EffectParameterDefinition:
+func get_parameter(parameter_id: StringName) -> ScreenEffectParameterDefinition:
 	assert(_parameters_by_id.has(parameter_id), "Unknown effect parameter: %s" % parameter_id)
 	return _parameters_by_id[parameter_id]
 

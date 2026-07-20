@@ -219,16 +219,16 @@ func _update_parameter_enabled_states() -> void:
 		assert(_parameter_rows.has(parameter.id), "Parameter row not found: %s" % parameter.id)
 		assert(_parameter_editors.has(parameter.id), "Parameter editor not found: %s" % parameter.id)
 
-		var enabled := _model.is_parameter_enabled(parameter.id)
+		var editable := _model.is_parameter_editable(parameter.id)
 		var row := _parameter_rows[parameter.id]
 		var editor := _parameter_editors[parameter.id]
 
-		_set_editor_enabled(editor, enabled)
+		_set_editor_enabled(editor, editable)
 
 		if _parameter_sliders.has(parameter.id):
-			_parameter_sliders[parameter.id].editable = enabled
+			_parameter_sliders[parameter.id].editable = editable
 
-		_set_row_enabled_appearance(row, enabled)
+		_set_row_enabled_appearance(row, editable)
 
 
 func _set_editor_enabled(editor: Control, enabled: bool) -> void:

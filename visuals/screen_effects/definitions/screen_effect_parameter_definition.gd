@@ -1,4 +1,4 @@
-class_name EffectParameterDefinition
+class_name ScreenEffectParameterDefinition
 extends RefCounted
 
 enum Kind {
