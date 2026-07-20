@@ -1,5 +1,5 @@
 class_name ScreenEffectStack
-extends CanvasLayer
+extends Node
 
 signal enabled_changed(enabled: bool)
 signal preset_changed(preset_name: String)
@@ -14,7 +14,7 @@ var enabled := true:
 			return
 
 		enabled = value
-		visible = enabled
+		_set_stages_visible(enabled)
 		enabled_changed.emit(enabled)
 
 var _preset_store: ScreenEffectPresetStore
@@ -137,11 +137,27 @@ func reset_all() -> void:
 func _get_effect_passes() -> Array[ScreenEffectPass]:
 	var effect_passes: Array[ScreenEffectPass] = []
 
-	for child in get_children():
-		assert(child is ScreenEffectPass, "ScreenEffectStack children must be ScreenEffectPass nodes")
-		effect_passes.append(child as ScreenEffectPass)
+	for stage in _get_effect_stages():
+		for child in stage.get_children():
+			assert(child is ScreenEffectPass, "Screen effect stages must contain ScreenEffectPass nodes")
+			effect_passes.append(child as ScreenEffectPass)
 
 	return effect_passes
+
+
+func _get_effect_stages() -> Array[CanvasLayer]:
+	var stages: Array[CanvasLayer] = []
+
+	for child in get_children():
+		assert(child is CanvasLayer, "ScreenEffectStack children must be CanvasLayer nodes")
+		stages.append(child as CanvasLayer)
+
+	return stages
+
+
+func _set_stages_visible(is_visible: bool) -> void:
+	for stage in _get_effect_stages():
+		stage.visible = is_visible
 
 
 func _connect_effect_states() -> void:

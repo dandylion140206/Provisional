@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://b06oaci8b0bhj" path="res://_wip/0040997d99e7fc8ecebb4518ae97c9e9.png" id="10_s758e"]
 [ext_resource type="PackedScene" uid="uid://biqf80oy0ponb" path="res://visuals/screen_effects/screen_effect_stack.tscn" id="13_4hmqs"]
 [ext_resource type="PackedScene" uid="uid://cosu16374nyna" path="res://visuals/screen_effects/debug/screen_effect_debugger.tscn" id="16_4hmqs"]
+[ext_resource type="Script" uid="uid://cbbvic5xvuvry" path="res://components/health/target_health_bar_layer.gd" id="17_health_bars"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_na0o7"]
 shader = ExtResource("2_bsumw")
@@ -66,6 +67,14 @@ unique_name_in_owner = true
 script = ExtResource("9_grrlh")
 min_shake_speed = 0.0
 trauma_at_max_speed = 0.8
+
+[node name="WorldUI" type="CanvasLayer" parent="." unique_id=304478551]
+layer = 100
+follow_viewport_enabled = true
+
+[node name="TargetHealthBarLayer" type="Node2D" parent="WorldUI" unique_id=1874207393]
+unique_name_in_owner = true
+script = ExtResource("17_health_bars")
 
 [node name="ScreenEffectStack" parent="." unique_id=1074589344 instance=ExtResource("13_4hmqs")]
 

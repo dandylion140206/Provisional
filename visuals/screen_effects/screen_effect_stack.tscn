@@ -7,27 +7,37 @@
 [ext_resource type="Resource" path="res://visuals/screen_effects/effects/chromatic_aberration/chromatic_aberration.tres" id="5_definition"]
 [ext_resource type="Resource" path="res://visuals/screen_effects/effects/glow/glow.tres" id="6_definition"]
 [ext_resource type="Resource" path="res://visuals/screen_effects/effects/color_grading/color_grading.tres" id="7_definition"]
+[ext_resource type="Resource" path="res://visuals/screen_effects/effects/pixelation/pixelation.tres" id="8_definition"]
 
-[node name="ScreenEffectStack" type="CanvasLayer" unique_id=91190207]
-layer = 100
+[node name="ScreenEffectStack" type="Node" unique_id=91190207]
 script = ExtResource("1_stack")
 
-[node name="ColorGrading" parent="." unique_id=565494613 instance=ExtResource("2_pass")]
+[node name="WorldEffectStage" type="CanvasLayer" parent="."]
+layer = 50
+
+[node name="Pixelation" parent="WorldEffectStage" instance=ExtResource("2_pass")]
+layout_mode = 3
+definition = ExtResource("8_definition")
+
+[node name="CompositeEffectStage" type="CanvasLayer" parent="."]
+layer = 150
+
+[node name="ColorGrading" parent="CompositeEffectStage" unique_id=565494613 instance=ExtResource("2_pass")]
 layout_mode = 3
 definition = ExtResource("7_definition")
 
-[node name="ChromaticAberration" parent="." unique_id=1764068135 instance=ExtResource("2_pass")]
+[node name="ChromaticAberration" parent="CompositeEffectStage" unique_id=1764068135 instance=ExtResource("2_pass")]
 layout_mode = 3
 definition = ExtResource("5_definition")
 
-[node name="Glow" parent="." unique_id=700692922 instance=ExtResource("2_pass")]
+[node name="Glow" parent="CompositeEffectStage" unique_id=700692922 instance=ExtResource("2_pass")]
 layout_mode = 3
 definition = ExtResource("6_definition")
 
-[node name="ColorQuantization" parent="." unique_id=1668903275 instance=ExtResource("2_pass")]
+[node name="ColorQuantization" parent="CompositeEffectStage" unique_id=1668903275 instance=ExtResource("2_pass")]
 layout_mode = 3
 definition = ExtResource("3_definition")
 
-[node name="ShadowMask" parent="." unique_id=2106660147 instance=ExtResource("2_pass")]
+[node name="ShadowMask" parent="CompositeEffectStage" unique_id=2106660147 instance=ExtResource("2_pass")]
 layout_mode = 3
 definition = ExtResource("4_definition")

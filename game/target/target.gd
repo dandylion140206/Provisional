@@ -1,12 +1,14 @@
 class_name Target
 extends Node2D
 
+signal health_changed(current_health: float, max_health: float)
+signal died
+
 @onready var visual: TargetVisual = %Visual
 @onready var hit_flash: HitFlash = %HitFlash
 @onready var hurtbox: Hurtbox = %Hurtbox
 @onready var hit_stop: HitStop = %HitStop
 @onready var health: Health = %Health
-@onready var health_bar: HealthBar = %HealthBar
 @onready var hit_sound: AudioStreamPlayer2D = %HitSound
 @onready var death_sound: AudioStreamPlayer2D = %DeathSound
 
@@ -47,7 +49,7 @@ func _on_damaged(
 
 func _on_health_changed(current_health: float, max_health: float) -> void:
 	visual.update_health(current_health, max_health)
-	health_bar.update_health(current_health, max_health)
+	health_changed.emit(current_health, max_health)
 
 
 func _on_died() -> void:
@@ -58,7 +60,7 @@ func _on_died() -> void:
 
 	hurtbox.set_enabled(false)
 	visual.visible = false
-	health_bar.hide_immediately()
+	died.emit()
 
 	_play_sound_from_start(death_sound)
 
@@ -70,3 +72,11 @@ func _on_died() -> void:
 func _play_sound_from_start(sound: AudioStreamPlayer2D) -> void:
 	sound.stop()
 	sound.play()
+
+
+func get_current_health() -> float:
+	return health.get_current_health()
+
+
+func get_max_health() -> float:
+	return health.max_health
