@@ -13,9 +13,9 @@ var display_name: String
 var kind: Kind
 var default_value: Variant
 
-var min_value := 0.0
-var max_value := 1.0
-var step := 0.01
+var min_value: float = 0.0
+var max_value: float = 1.0
+var step: float = 0.01
 
 var options: PackedStringArray
 var option_values: Array[int] = []

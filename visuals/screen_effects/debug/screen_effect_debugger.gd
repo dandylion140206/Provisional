@@ -5,6 +5,9 @@ signal panel_visibility_changed(is_visible: bool)
 
 @export var screen_effect_stack: ScreenEffectStack
 
+var _preset_names: Array[String] = []
+var _pending_preset_name: String = ""
+
 @onready var _debug_window: Control = $ScreenEffectDebugWindow
 @onready var _master_enabled: CheckBox = %MasterEnabled
 @onready var _preset_selector: OptionButton = %PresetSelector
@@ -18,9 +21,6 @@ signal panel_visibility_changed(is_visible: bool)
 @onready var _discard_changes_dialog: ConfirmationDialog = %DiscardChangesDialog
 @onready var _save_as_preset_dialog: ConfirmationDialog = %SaveAsPresetDialog
 @onready var _preset_name_input: LineEdit = %PresetNameInput
-
-var _preset_names: Array[String] = []
-var _pending_preset_name := ""
 
 
 func _ready() -> void:

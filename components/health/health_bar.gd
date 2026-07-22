@@ -14,6 +14,19 @@ func _ready() -> void:
 	visible = false
 
 
+func _draw() -> void:
+	var top_left := -size * 0.5
+	var background_rect := Rect2(top_left, size)
+
+	draw_rect(background_rect, background_color, true)
+
+	var fill_size := Vector2(size.x * _health_ratio, size.y)
+	var fill_rect := Rect2(top_left, fill_size)
+
+	draw_rect(fill_rect, fill_color, true)
+	draw_rect(background_rect, border_color, false, 1.0)
+
+
 func update_health(current_health: float, max_health: float) -> void:
 	if max_health <= 0.0:
 		_health_ratio = 0.0
@@ -27,16 +40,3 @@ func update_health(current_health: float, max_health: float) -> void:
 
 func hide_immediately() -> void:
 	visible = false
-
-
-func _draw() -> void:
-	var top_left := -size * 0.5
-	var background_rect := Rect2(top_left, size)
-
-	draw_rect(background_rect, background_color, true)
-
-	var fill_size := Vector2(size.x * _health_ratio, size.y)
-	var fill_rect := Rect2(top_left, fill_size)
-
-	draw_rect(fill_rect, fill_color, true)
-	draw_rect(background_rect, border_color, false, 1.0)

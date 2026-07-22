@@ -1,8 +1,8 @@
 class_name ScreenEffectDebugWindow
 extends PanelContainer
 
-var _is_dragging := false
-var _drag_offset := Vector2.ZERO
+var _is_dragging: bool = false
+var _drag_offset: Vector2 = Vector2.ZERO
 
 @onready var _drag_area: Control = %DragArea
 @onready var _close_button: Button = %CloseButton

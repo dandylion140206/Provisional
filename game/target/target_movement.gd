@@ -17,16 +17,29 @@ enum State {
 
 var _body: Node2D
 var _movement: Movement
-var _viewport_size := Vector2.ZERO
-var _spawn_margin := 0.0
-var _target_radius := 0.0
-var _goal_position := Vector2.ZERO
-var _entry_direction := Vector2.ZERO
-var _state := State.ENTERING
-var _wait_elapsed := 0.0
-var _wander_time := 0.0
-var _wander_phase := 0.0
-var _is_active := false
+var _viewport_size: Vector2 = Vector2.ZERO
+var _spawn_margin: float = 0.0
+var _target_radius: float = 0.0
+var _goal_position: Vector2 = Vector2.ZERO
+var _entry_direction: Vector2 = Vector2.ZERO
+var _state: State = State.ENTERING
+var _wait_elapsed: float = 0.0
+var _wander_time: float = 0.0
+var _wander_phase: float = 0.0
+var _is_active: bool = false
+
+
+func _physics_process(delta: float) -> void:
+	if not _is_active:
+		return
+
+	match _state:
+		State.ENTERING:
+			_update_entering(delta)
+		State.WAITING:
+			_update_waiting(delta)
+		State.EXITING:
+			_update_exiting(delta)
 
 
 func setup(body: Node2D, movement: Movement) -> void:
@@ -63,19 +76,6 @@ func initialize(
 func stop() -> void:
 	_is_active = false
 	_movement.set_velocity(Vector2.ZERO)
-
-
-func _physics_process(delta: float) -> void:
-	if not _is_active:
-		return
-
-	match _state:
-		State.ENTERING:
-			_update_entering(delta)
-		State.WAITING:
-			_update_waiting(delta)
-		State.EXITING:
-			_update_exiting(delta)
 
 
 func _update_entering(delta: float) -> void:

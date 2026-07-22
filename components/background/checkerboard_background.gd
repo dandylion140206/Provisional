@@ -1,7 +1,7 @@
 class_name CheckerboardBackground
 extends ColorRect
 
-@export var coverage_size := Vector2(65536.0, 65536.0)
+@export var coverage_size: Vector2 = Vector2(65536.0, 65536.0)
 
 
 func _ready() -> void:

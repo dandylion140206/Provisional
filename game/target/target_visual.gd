@@ -8,6 +8,13 @@ extends Node2D
 var _health_ratio: float = 1.0
 
 
+func _draw() -> void:
+	var damage_ratio := 1.0 - _health_ratio
+	var color := full_health_color.lerp(low_health_color, damage_ratio)
+
+	draw_circle(Vector2.ZERO, radius, color)
+
+
 func update_health(current_health: float, max_health: float) -> void:
 	if max_health <= 0.0:
 		_health_ratio = 0.0
@@ -15,10 +22,3 @@ func update_health(current_health: float, max_health: float) -> void:
 		_health_ratio = clampf(current_health / max_health, 0.0, 1.0)
 
 	queue_redraw()
-
-
-func _draw() -> void:
-	var damage_ratio := 1.0 - _health_ratio
-	var color := full_health_color.lerp(low_health_color, damage_ratio)
-
-	draw_circle(Vector2.ZERO, radius, color)

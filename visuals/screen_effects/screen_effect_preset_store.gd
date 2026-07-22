@@ -6,7 +6,7 @@ const SETTINGS_SECTION := "settings"
 const ACTIVE_PRESET_KEY := "active_preset"
 const PRESET_SECTION_PREFIX := "preset/"
 
-var _config := ConfigFile.new()
+var _config: ConfigFile = ConfigFile.new()
 
 
 func _init() -> void:

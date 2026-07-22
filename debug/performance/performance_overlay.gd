@@ -3,17 +3,17 @@ extends CanvasLayer
 
 const MILLISECONDS_PER_SECOND := 1000.0
 
-@export_range(0.05, 3.0, 0.05) var update_interval := 0.10
-
-@onready var _label: Label = $Label
+@export_range(0.05, 3.0, 0.05) var update_interval: float = 0.10
 
 var _viewport_rid: RID
-var _last_update_time_msec := 0
-var _fps := 0.0
-var _frame_time_msec := 0.0
-var _cpu_render_time_msec := 0.0
-var _gpu_render_time_msec := 0.0
-var _draw_calls := 0
+var _last_update_time_msec: int = 0
+var _fps: float = 0.0
+var _frame_time_msec: float = 0.0
+var _cpu_render_time_msec: float = 0.0
+var _gpu_render_time_msec: float = 0.0
+var _draw_calls: int = 0
+
+@onready var _label: Label = $Label
 
 
 func _ready() -> void:
@@ -56,7 +56,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
 func _update_performance_display() -> void:
 	_fps = float(Performance.get_monitor(Performance.TIME_FPS))
-	_frame_time_msec = float(Performance.get_monitor(Performance.TIME_PROCESS)) * MILLISECONDS_PER_SECOND
+	_frame_time_msec = (
+		float(Performance.get_monitor(Performance.TIME_PROCESS))
+		* MILLISECONDS_PER_SECOND
+	)
 	_cpu_render_time_msec = (
 		RenderingServer.get_frame_setup_time_cpu()
 		+ RenderingServer.viewport_get_measured_render_time_cpu(_viewport_rid)

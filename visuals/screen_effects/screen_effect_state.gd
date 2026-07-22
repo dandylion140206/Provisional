@@ -8,7 +8,7 @@ var id: StringName
 var display_name: String
 var parameters: Array[ScreenEffectParameterDefinition] = []
 
-var enabled := true:
+var enabled: bool = true:
 	set(value):
 		if enabled == value:
 			return
@@ -19,7 +19,7 @@ var enabled := true:
 var _activation_rules: Array[ScreenEffectParameterActivationRule] = []
 var _parameters_by_id: Dictionary[StringName, ScreenEffectParameterDefinition] = {}
 var _values: Dictionary[StringName, Variant] = {}
-var _default_enabled := true
+var _default_enabled: bool = true
 
 
 func _init(definition: ScreenEffectDefinition) -> void:

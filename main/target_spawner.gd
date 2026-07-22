@@ -3,6 +3,13 @@ extends Node2D
 
 signal target_spawned(target: Target)
 
+enum SpawnSide {
+	TOP,
+	RIGHT,
+	BOTTOM,
+	LEFT,
+}
+
 @export var target_scene: PackedScene
 @export_range(1, 100, 1) var target_count: int = 30
 @export_range(1, 100, 1) var spawn_group_size_min: int = 3
@@ -15,26 +22,23 @@ signal target_spawned(target: Target)
 @export_range(0.0, 100.0, 0.1) var spawn_weight_right: float = 1.0
 @export_range(0.0, 100.0, 0.1) var spawn_weight_bottom: float = 1.0
 @export_range(0.0, 100.0, 0.1) var spawn_weight_left: float = 1.0
-@export var goal_area_radius := Vector2(480.0, 270.0)
+@export var goal_area_radius: Vector2 = Vector2(480.0, 270.0)
 @export_range(1, 32, 1) var goal_proximity_candidate_count: int = 4
 
 var targets: Array[Target] = []
-var _random := RandomNumberGenerator.new()
-var _spawn_loop_running := false
-
-
-enum SpawnSide {
-	TOP,
-	RIGHT,
-	BOTTOM,
-	LEFT,
-}
+var _random: RandomNumberGenerator = RandomNumberGenerator.new()
+var _spawn_loop_running: bool = false
 
 
 func _ready() -> void:
 	_validate_configuration()
 
 	_random.randomize()
+	_request_spawn()
+
+
+func _on_target_finished(target: Target) -> void:
+	targets.erase(target)
 	_request_spawn()
 
 
@@ -92,11 +96,6 @@ func _spawn_target(base_position: Vector2, viewport_size: Vector2) -> void:
 
 	targets.append(target)
 	target_spawned.emit(target)
-
-
-func _on_target_finished(target: Target) -> void:
-	targets.erase(target)
-	_request_spawn()
 
 
 func _get_group_base_position(

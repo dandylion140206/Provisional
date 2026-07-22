@@ -1,9 +1,21 @@
 class_name TargetHealthBarLayer
 extends Node2D
 
-@export var health_bar_offset := Vector2(0.0, -55.0)
+@export var health_bar_offset: Vector2 = Vector2(0.0, -55.0)
 
 var _health_bars: Dictionary = {}
+
+
+func _process(_delta: float) -> void:
+	for target_value: Variant in _health_bars.keys():
+		var target := target_value as Target
+		var health_bar := _health_bars[target] as HealthBar
+
+		if not is_instance_valid(target) or not is_instance_valid(health_bar):
+			remove_target(target)
+			continue
+
+		_update_health_bar_position(target, health_bar)
 
 
 func add_target(target: Target) -> void:
@@ -25,20 +37,6 @@ func add_target(target: Target) -> void:
 		target.get_max_health(),
 	)
 	_update_health_bar_position(target, health_bar)
-
-
-func _process(_delta: float) -> void:
-	for target_value: Variant in _health_bars.keys():
-		var target := target_value as Target
-		var health_bar := _health_bars[target] as HealthBar
-
-		if not is_instance_valid(target) or not is_instance_valid(health_bar):
-			remove_target(target)
-			continue
-
-		_update_health_bar_position(target, health_bar)
-
-
 func remove_target(target: Target) -> void:
 	if not _health_bars.has(target):
 		return

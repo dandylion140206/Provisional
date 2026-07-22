@@ -1,7 +1,7 @@
 class_name CameraShake
 extends Node
 
-@export var max_offset := Vector2(20.0, 12.0)
+@export var max_offset: Vector2 = Vector2(20.0, 12.0)
 @export_range(0.0, 5.0, 0.1) var max_rotation_degrees: float = 0.0
 @export_range(0.0, 10.0, 0.1) var trauma_decay_rate: float = 3.0
 @export_range(1.0, 4.0, 0.1) var trauma_power: float = 2.0
@@ -9,11 +9,11 @@ extends Node
 @export_range(0.0, 0.5, 0.01) var trauma_dead_zone: float = 0.1
 
 var _camera: Camera2D
-var _base_offset := Vector2.ZERO
-var _base_rotation := 0.0
-var _trauma := 0.0
-var _noise_position := 0.0
-var _noise := FastNoiseLite.new()
+var _base_offset: Vector2 = Vector2.ZERO
+var _base_rotation: float = 0.0
+var _trauma: float = 0.0
+var _noise_position: float = 0.0
+var _noise: FastNoiseLite = FastNoiseLite.new()
 
 
 func _process(delta: float) -> void:
@@ -54,6 +54,14 @@ func _process(delta: float) -> void:
 		_reset_camera_transform()
 
 
+func _exit_tree() -> void:
+	if not is_instance_valid(_camera):
+		return
+
+	_camera.offset = _base_offset
+	_camera.rotation = _base_rotation
+
+
 func setup(camera: Camera2D) -> void:
 	assert(camera != null, "camera must not be null.")
 
@@ -87,14 +95,6 @@ func stop() -> void:
 
 func _reset_camera_transform() -> void:
 	if _camera == null:
-		return
-
-	_camera.offset = _base_offset
-	_camera.rotation = _base_rotation
-
-
-func _exit_tree() -> void:
-	if not is_instance_valid(_camera):
 		return
 
 	_camera.offset = _base_offset

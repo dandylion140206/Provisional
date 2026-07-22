@@ -15,11 +15,11 @@ var _source: Node2D
 var _get_interpolated_position: Callable
 var _point_ages: Array[float] = []
 
-var _is_lifetime_transitioning := false
-var _lifetime_transition_start := 0.0
-var _lifetime_transition_target := 0.0
-var _lifetime_transition_duration := 0.0
-var _lifetime_transition_elapsed := 0.0
+var _is_lifetime_transitioning: bool = false
+var _lifetime_transition_start: float = 0.0
+var _lifetime_transition_target: float = 0.0
+var _lifetime_transition_duration: float = 0.0
+var _lifetime_transition_elapsed: float = 0.0
 
 
 func _ready() -> void:

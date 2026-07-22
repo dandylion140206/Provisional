@@ -4,10 +4,9 @@ extends Control
 @export var definition: ScreenEffectDefinition
 
 var state: ScreenEffectState
+var _material: ShaderMaterial
 
 @onready var _full_screen_rect: ColorRect = $FullScreenRect
-
-var _material: ShaderMaterial
 
 
 func _ready() -> void:

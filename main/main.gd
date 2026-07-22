@@ -1,28 +1,28 @@
 extends Node2D
 
-@onready var input_controller: InputController = $InputController
-@onready var ball: Ball = $Ball
-@onready var camera: Camera2D = $Camera2D
-@onready var camera_shake: CameraShake = %CameraShake
-@onready var impact_camera_shake: ImpactCameraShake = %ImpactCameraShake
-@onready var target_spawner: TargetSpawner = $TargetSpawner
-@onready var target_health_bar_layer: TargetHealthBarLayer = %TargetHealthBarLayer
+@onready var _input_controller: InputController = $InputController
+@onready var _ball: Ball = $Ball
+@onready var _camera: Camera2D = $Camera2D
+@onready var _camera_shake: CameraShake = %CameraShake
+@onready var _impact_camera_shake: ImpactCameraShake = %ImpactCameraShake
+@onready var _target_spawner: TargetSpawner = $TargetSpawner
+@onready var _target_health_bar_layer: TargetHealthBarLayer = %TargetHealthBarLayer
 
 func _ready() -> void:
-	camera_shake.setup(camera)
-	impact_camera_shake.setup(camera_shake)
+	_camera_shake.setup(_camera)
+	_impact_camera_shake.setup(_camera_shake)
 
-	ball.hit_landed.connect(impact_camera_shake.apply_hit)
-	input_controller.active_ability_requested.connect(
-		ball.request_active_ability
+	_ball.hit_landed.connect(_impact_camera_shake.apply_hit)
+	_input_controller.active_ability_requested.connect(
+		_ball.request_active_ability
 	)
-	target_spawner.target_spawned.connect(target_health_bar_layer.add_target)
+	_target_spawner.target_spawned.connect(_target_health_bar_layer.add_target)
 
-	for target in target_spawner.targets:
-		target_health_bar_layer.add_target(target)
+	for target in _target_spawner.targets:
+		_target_health_bar_layer.add_target(target)
 
-	ball.set_target_position(get_global_mouse_position())
+	_ball.set_target_position(get_global_mouse_position())
 
 
 func _physics_process(_delta: float) -> void:
-	ball.set_target_position(get_global_mouse_position())
+	_ball.set_target_position(get_global_mouse_position())

@@ -6,9 +6,9 @@ signal preset_changed(preset_name: String)
 signal preset_dirty_changed(is_dirty: bool)
 signal settings_changed
 
-@export var enabled_by_default := true
+@export var enabled_by_default: bool = true
 
-var enabled := true:
+var enabled: bool = true:
 	set(value):
 		if enabled == value:
 			return
@@ -18,15 +18,18 @@ var enabled := true:
 		enabled_changed.emit(enabled)
 
 var _preset_store: ScreenEffectPresetStore
-var _active_preset_name := "Default"
+var _active_preset_name: String = "Default"
 var _saved_settings: Dictionary = {}
-var _is_preset_dirty := false
-var _is_applying_settings := false
+var _is_preset_dirty: bool = false
+var _is_applying_settings: bool = false
 
 
 func _ready() -> void:
 	for effect_pass in _get_effect_passes():
-		assert(effect_pass.state != null, "Screen effect state must be initialized: %s" % effect_pass.name)
+		assert(
+			effect_pass.state != null,
+			"Screen effect state must be initialized: %s" % effect_pass.name
+		)
 
 	_connect_effect_states()
 
@@ -43,7 +46,10 @@ func get_states() -> Array[ScreenEffectState]:
 	var states: Array[ScreenEffectState] = []
 
 	for effect_pass in _get_effect_passes():
-		assert(effect_pass.state != null, "Screen effect state must be initialized: %s" % effect_pass.name)
+		assert(
+			effect_pass.state != null,
+			"Screen effect state must be initialized: %s" % effect_pass.name
+		)
 		states.append(effect_pass.state)
 
 	return states
@@ -134,6 +140,38 @@ func reset_all() -> void:
 	settings_changed.emit()
 
 
+func create_settings() -> Dictionary:
+	var effect_settings := {}
+
+	for state in get_states():
+		effect_settings[String(state.id)] = state.create_settings()
+
+	return {
+		"enabled": enabled,
+		"effects": effect_settings,
+	}
+
+
+func _on_effect_state_changed(_id: StringName, _value: Variant) -> void:
+	_on_settings_changed()
+
+
+func _on_effect_state_enabled_changed(_enabled: bool) -> void:
+	_on_settings_changed()
+
+
+func _on_stack_enabled_changed(_enabled: bool) -> void:
+	_on_settings_changed()
+
+
+func _on_settings_changed() -> void:
+	if _is_applying_settings:
+		return
+
+	_update_preset_dirty_state()
+	settings_changed.emit()
+
+
 func _get_effect_passes() -> Array[ScreenEffectPass]:
 	var effect_passes: Array[ScreenEffectPass] = []
 
@@ -171,26 +209,6 @@ func _connect_effect_states() -> void:
 		state.enabled_changed.connect(_on_effect_state_enabled_changed)
 
 	enabled_changed.connect(_on_stack_enabled_changed)
-
-
-func _on_effect_state_changed(_id: StringName, _value: Variant) -> void:
-	_on_settings_changed()
-
-
-func _on_effect_state_enabled_changed(_enabled: bool) -> void:
-	_on_settings_changed()
-
-
-func _on_stack_enabled_changed(_enabled: bool) -> void:
-	_on_settings_changed()
-
-
-func _on_settings_changed() -> void:
-	if _is_applying_settings:
-		return
-
-	_update_preset_dirty_state()
-	settings_changed.emit()
 
 
 func _apply_preset(preset_name: String) -> void:
@@ -252,15 +270,3 @@ func _update_preset_dirty_state() -> void:
 
 	_is_preset_dirty = is_dirty
 	preset_dirty_changed.emit(_is_preset_dirty)
-
-
-func create_settings() -> Dictionary:
-	var effect_settings := {}
-
-	for state in get_states():
-		effect_settings[String(state.id)] = state.create_settings()
-
-	return {
-		"enabled": enabled,
-		"effects": effect_settings,
-	}

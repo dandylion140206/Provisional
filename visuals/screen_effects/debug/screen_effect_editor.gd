@@ -28,6 +28,57 @@ func setup(state: ScreenEffectState) -> void:
 	_update_parameter_activation_states()
 
 
+func _on_enabled_checkbox_toggled(enabled: bool) -> void:
+	assert(_state != null, "ScreenEffectState must not be null")
+	_state.enabled = enabled
+
+
+func _on_effect_reset_pressed() -> void:
+	assert(_state != null, "ScreenEffectState must not be null")
+	_state.reset()
+
+
+func _on_parameter_reset_pressed(parameter_id: StringName) -> void:
+	assert(_state != null, "ScreenEffectState must not be null")
+	_state.reset_parameter(parameter_id)
+
+
+func _on_number_value_changed(value: float, parameter_id: StringName) -> void:
+	assert(_state != null, "ScreenEffectState must not be null")
+	_state.set_value(parameter_id, value)
+
+
+func _on_boolean_toggled(value: bool, parameter_id: StringName) -> void:
+	assert(_state != null, "ScreenEffectState must not be null")
+	_state.set_value(parameter_id, value)
+
+
+func _on_enum_item_selected(index: int, parameter_id: StringName) -> void:
+	assert(_state != null, "ScreenEffectState must not be null")
+
+	var parameter := _state.get_parameter(parameter_id)
+
+	assert(
+		index >= 0 and index < parameter.option_values.size(),
+		"Invalid enum option index: %s" % index,
+	)
+
+	_state.set_value(parameter_id, parameter.option_values[index])
+
+
+func _on_state_enabled_changed(enabled: bool) -> void:
+	if _enabled_checkbox == null:
+		return
+
+	_enabled_checkbox.set_pressed_no_signal(enabled)
+	_update_parameter_activation_states()
+
+
+func _on_state_parameter_changed(id: StringName, value: Variant) -> void:
+	_update_editor_value(id, value)
+	_update_parameter_activation_states()
+
+
 func _create_enabled_editor() -> void:
 	var header := HBoxContainer.new()
 
@@ -153,59 +204,6 @@ func _create_enum_editor(parameter: ScreenEffectParameterDefinition) -> void:
 	_parameter_rows[parameter.id] = row
 	_parameter_editors[parameter.id] = option_button
 	_parameter_reset_buttons[parameter.id] = reset_button
-
-
-func _on_enabled_checkbox_toggled(enabled: bool) -> void:
-	assert(_state != null, "ScreenEffectState must not be null")
-	_state.enabled = enabled
-
-
-func _on_effect_reset_pressed() -> void:
-	assert(_state != null, "ScreenEffectState must not be null")
-	_state.reset()
-
-
-func _on_parameter_reset_pressed(parameter_id: StringName) -> void:
-	assert(_state != null, "ScreenEffectState must not be null")
-	_state.reset_parameter(parameter_id)
-
-
-func _on_number_value_changed(value: float, parameter_id: StringName) -> void:
-	assert(_state != null, "ScreenEffectState must not be null")
-	_state.set_value(parameter_id, value)
-
-
-func _on_boolean_toggled(value: bool, parameter_id: StringName) -> void:
-	assert(_state != null, "ScreenEffectState must not be null")
-	_state.set_value(parameter_id, value)
-
-
-func _on_enum_item_selected(index: int, parameter_id: StringName) -> void:
-	assert(_state != null, "ScreenEffectState must not be null")
-
-	var parameter := _state.get_parameter(parameter_id)
-
-	assert(
-		index >= 0 and index < parameter.option_values.size(),
-		"Invalid enum option index: %s" % index,
-	)
-
-	_state.set_value(parameter_id, parameter.option_values[index])
-
-
-func _on_state_enabled_changed(enabled: bool) -> void:
-	if _enabled_checkbox == null:
-		return
-
-	_enabled_checkbox.set_pressed_no_signal(enabled)
-	_update_parameter_activation_states()
-
-
-func _on_state_parameter_changed(id: StringName, value: Variant) -> void:
-	_update_editor_value(id, value)
-	_update_parameter_activation_states()
-
-
 func _update_editor_value(id: StringName, value: Variant) -> void:
 	assert(_parameter_editors.has(id), "Parameter editor not found: %s" % id)
 

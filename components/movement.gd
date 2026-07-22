@@ -6,7 +6,7 @@ extends Node
 @export_range(100.0, 20000.0, 100.0) var max_speed: float = 7000.0
 
 var _body: Node2D
-var _velocity := Vector2.ZERO
+var _velocity: Vector2 = Vector2.ZERO
 
 
 func setup(body: Node2D) -> void:

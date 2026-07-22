@@ -7,9 +7,15 @@ extends Resource
 
 
 func validate(parameter_ids: Dictionary[StringName, bool]) -> void:
-	assert(parameter_ids.has(condition_parameter), "Unknown condition parameter: %s" % condition_parameter)
+	assert(
+		parameter_ids.has(condition_parameter),
+		"Unknown condition parameter: %s" % condition_parameter
+	)
 	assert(not active_values.is_empty(), "Active values must not be empty: %s" % condition_parameter)
-	assert(not target_parameters.is_empty(), "Target parameters must not be empty: %s" % condition_parameter)
+	assert(
+		not target_parameters.is_empty(),
+		"Target parameters must not be empty: %s" % condition_parameter
+	)
 
 	for parameter_id in target_parameters:
 		assert(parameter_ids.has(parameter_id), "Unknown target parameter: %s" % parameter_id)

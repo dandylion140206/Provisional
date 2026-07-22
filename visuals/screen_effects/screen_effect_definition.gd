@@ -4,7 +4,7 @@ extends Resource
 @export var id: StringName
 @export var display_name: String
 @export var shader: Shader
-@export var enabled_by_default := true
+@export var enabled_by_default: bool = true
 @export var activation_rules: Array[ScreenEffectParameterActivationRule] = []
 
 

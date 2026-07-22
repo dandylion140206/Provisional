@@ -2,8 +2,8 @@ class_name PhysicsPositionInterpolator
 extends Node
 
 var _source: Node2D
-var _previous_physics_position := Vector2.ZERO
-var _current_physics_position := Vector2.ZERO
+var _previous_physics_position: Vector2 = Vector2.ZERO
+var _current_physics_position: Vector2 = Vector2.ZERO
 
 
 func setup(source: Node2D) -> void:

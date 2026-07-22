@@ -62,7 +62,10 @@ static func _read_parameter(
 
 	parameter.default_value = RenderingServer.shader_get_parameter_default(shader_rid, parameter_id)
 
-	assert(parameter.default_value != null, "Shader parameter default value is null: %s" % parameter_id)
+	assert(
+		parameter.default_value != null,
+		"Shader parameter default value is null: %s" % parameter_id
+	)
 
 	parameter.default_value = parameter.normalize_value(parameter.default_value)
 
@@ -80,7 +83,10 @@ static func _apply_range_hint(
 	hint: int,
 	hint_string: String,
 ) -> void:
-	assert(hint == PROPERTY_HINT_RANGE, "Numeric shader parameter requires hint_range: %s" % parameter.id)
+	assert(
+		hint == PROPERTY_HINT_RANGE,
+		"Numeric shader parameter requires hint_range: %s" % parameter.id
+	)
 
 	var range_parts := hint_string.split(",")
 

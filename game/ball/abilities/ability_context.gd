@@ -16,7 +16,10 @@ func _init(
 	assert(p_body != null, "p_body must not be null.")
 	assert(p_movement != null, "p_movement must not be null.")
 	assert(p_cancel_hit_stop.is_valid(), "p_cancel_hit_stop must be valid.")
-	assert(p_get_interpolated_global_position.is_valid(), "p_get_interpolated_global_position must be valid.")
+	assert(
+		p_get_interpolated_global_position.is_valid(),
+		"p_get_interpolated_global_position must be valid."
+	)
 
 	body = p_body
 	movement = p_movement
