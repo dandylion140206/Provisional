@@ -10,9 +10,15 @@ condition_parameter = &"mask_type"
 active_values = [0, 1]
 target_parameters = Array[StringName]([&"dot_size"])
 
+[sub_resource type="Resource" id="ActivationRule_slot"]
+script = ExtResource("2_rule")
+condition_parameter = &"mask_type"
+active_values = [2, 3, 4]
+target_parameters = Array[StringName]([&"slot_unit_gap_x", &"slot_unit_gap_y"])
+
 [resource]
 script = ExtResource("1_definition")
 id = &"shadow_mask"
 display_name = "Shadow Mask"
 shader = ExtResource("3_shader")
-activation_rules = Array[ExtResource("2_rule")]([SubResource("ActivationRule_dot")])
+activation_rules = Array[ExtResource("2_rule")]([SubResource("ActivationRule_dot"), SubResource("ActivationRule_slot")])

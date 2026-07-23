@@ -39,7 +39,9 @@ func _ready() -> void:
 
 func _on_target_finished(target: Target) -> void:
 	targets.erase(target)
-	_request_spawn()
+
+	# A target can finish from an Area2D callback while physics queries are flushing.
+	call_deferred("_request_spawn")
 
 
 func _request_spawn() -> void:

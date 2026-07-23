@@ -11,13 +11,13 @@
 作業前に以下のファイルを参照すること。
 
 - 設計: `docs/DESIGN.md`
-- コード関連: `docs/CODE_STYLE.md`
+- GDScript関連: `docs/GDSCRIPT.md`
+- Shader関連: `docx/SHADER.md`
 - プロジェクト構造: `docx/ARCHITECTURE.md`
 
 ## 基本方針
 
 Godotに関する仕様や推奨事項については、[Godot Docs](https://docs.godotengine.org/en/stable/index.html) を基本とする。
-
 
 複数の規則が競合する場合は、次の優先順位に従う。
 
