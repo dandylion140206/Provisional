@@ -1,8 +1,0 @@
-[gd_resource type="Resource" script_class="ScreenEffectDefinition" format=3]
-[ext_resource type="Script" path="res://visuals/screen_effects/screen_effect_definition.gd" id="1"]
-[ext_resource type="Shader" path="res://visuals/screen_effects/effects/test/crt_display/crt_display.gdshader" id="2"]
-[resource]
-script = ExtResource("1")
-id = &"test_crt_display"
-display_name = "Test CRT Display"
-shader = ExtResource("2")

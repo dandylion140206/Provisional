@@ -12,7 +12,7 @@
 [ext_resource type="Script" uid="uid://d0yihjvph111e" path="res://main/camera/camera_shake.gd" id="8_67ri8"]
 [ext_resource type="Script" uid="uid://cb4ft125etweq" path="res://main/camera/impact_camera_shake.gd" id="9_grrlh"]
 [ext_resource type="Texture2D" uid="uid://b06oaci8b0bhj" path="res://_wip/0040997d99e7fc8ecebb4518ae97c9e9.png" id="10_s758e"]
-[ext_resource type="PackedScene" path="res://visuals/screen_effects/test_stack.tscn" id="14_n3o0a"]
+[ext_resource type="PackedScene" uid="uid://biqf80oy0ponb" path="res://visuals/screen_effects/screen_effect_stack.tscn" id="13_n3o0a"]
 [ext_resource type="PackedScene" uid="uid://cosu16374nyna" path="res://visuals/screen_effects/debug/screen_effect_debugger.tscn" id="16_4hmqs"]
 [ext_resource type="Script" uid="uid://cbbvic5xvuvry" path="res://components/health/target_health_bar_layer.gd" id="17_health_bars"]
 [ext_resource type="Script" uid="uid://bpiihelli555x" path="res://debug/performance/performance_overlay.gd" id="18_performance"]
@@ -72,6 +72,8 @@ script = ExtResource("9_grrlh")
 min_shake_speed = 0.0
 trauma_at_max_speed = 0.8
 
+[node name="ScreenEffectStack" parent="." unique_id=91190207 instance=ExtResource("13_n3o0a")]
+
 [node name="WorldUI" type="CanvasLayer" parent="." unique_id=304478551]
 layer = 100
 follow_viewport_enabled = true
@@ -79,8 +81,6 @@ follow_viewport_enabled = true
 [node name="TargetHealthBarLayer" type="Node2D" parent="WorldUI" unique_id=1874207393]
 unique_name_in_owner = true
 script = ExtResource("17_health_bars")
-
-[node name="ScreenEffectStack" parent="." unique_id=1300603469 instance=ExtResource("14_n3o0a")]
 
 [node name="ScreenEffectDebugger" parent="." unique_id=765001636 node_paths=PackedStringArray("screen_effect_stack") instance=ExtResource("16_4hmqs")]
 screen_effect_stack = NodePath("../ScreenEffectStack")

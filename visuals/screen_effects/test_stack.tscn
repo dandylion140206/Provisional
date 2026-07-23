@@ -2,11 +2,7 @@
 
 [ext_resource type="Script" uid="uid://b44i6npvs2em" path="res://visuals/screen_effects/screen_effect_stack.gd" id="1_stack"]
 [ext_resource type="PackedScene" path="res://visuals/screen_effects/screen_effect_pass.tscn" id="2_pass"]
-[ext_resource type="Resource" path="res://visuals/screen_effects/effects/test/crt_chroma_bleeding/crt_chroma_bleeding.tres" id="3_chroma"]
-[ext_resource type="Resource" path="res://visuals/screen_effects/effects/test/crt_convergence/crt_convergence.tres" id="4_convergence"]
-[ext_resource type="Resource" path="res://visuals/screen_effects/effects/test/crt_display/crt_display.tres" id="5_display"]
-[ext_resource type="Resource" path="res://visuals/screen_effects/effects/test/crt_phosphor_glow/crt_phosphor_glow.tres" id="6_glow"]
-[ext_resource type="Resource" path="res://visuals/screen_effects/effects/test/crt_gamma/crt_gamma.tres" id="7_gamma"]
+[ext_resource type="Resource" path="res://visuals/screen_effects/effects/test/libretro_dotmask/libretro_dotmask.tres" id="3_dotmask"]
 
 [node name="ScreenEffectStack" type="Node"]
 script = ExtResource("1_stack")
@@ -17,22 +13,6 @@ layer = 50
 [node name="CompositeEffectStage" type="CanvasLayer" parent="."]
 layer = 150
 
-[node name="CrtChromaBleeding" parent="CompositeEffectStage" instance=ExtResource("2_pass")]
+[node name="LibretroDotMask" parent="CompositeEffectStage" instance=ExtResource("2_pass")]
 layout_mode = 3
-definition = ExtResource("3_chroma")
-
-[node name="CrtConvergence" parent="CompositeEffectStage" instance=ExtResource("2_pass")]
-layout_mode = 3
-definition = ExtResource("4_convergence")
-
-[node name="CrtDisplay" parent="CompositeEffectStage" instance=ExtResource("2_pass")]
-layout_mode = 3
-definition = ExtResource("5_display")
-
-[node name="CrtPhosphorGlow" parent="CompositeEffectStage" instance=ExtResource("2_pass")]
-layout_mode = 3
-definition = ExtResource("6_glow")
-
-[node name="CrtGamma" parent="CompositeEffectStage" instance=ExtResource("2_pass")]
-layout_mode = 3
-definition = ExtResource("7_gamma")
+definition = ExtResource("3_dotmask")
